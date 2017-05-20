@@ -1,0 +1,526 @@
+\input{preambuloSimple.tex}
+
+%----------------------------------------------------------------------------------------
+%	TÍTULO Y DATOS DEL ALUMNO
+%----------------------------------------------------------------------------------------
+
+\title{	
+\normalfont \normalsize 
+\textsc{\textbf{Ingeniería de Servidores (2016-2017)} \\ Doble grado en Ingeniería Informática y Matemáticas \\ Universidad de Granada} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{2pt} \\[0.4cm] % Thin top horizontal rule
+\huge Memoria Práctica 1 \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Miguel Ángel Torres López} % Nombre y apellidos
+
+\date{\normalsize\today} % Incluye la fecha actual
+
+%----------------------------------------------------------------------------------------
+% DOCUMENTO
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Muestra el Título
+
+\newpage %inserta un salto de página
+
+\tableofcontents % para generar el índice de contenidos
+
+\newpage
+
+\listoffigures
+
+\listoftables
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 1
+%----------------------------------------------------------------------------------------
+
+\section{¿Qué modos y/o tipos de "virtualización'' existen?}
+
+%------------------------------------------------
+Según afirma Zane Gramenidis\cite{cita1} existen cinco tipos de virtualización en computación que a menudo no aparecen bien diferenciados entre los fabricantes.
+
+\begin{itemize}
+	\item \textbf{Virtualización de Aplicación}
+	
+	Permite ejecutar aplicaciones software desde dispositivos que no están preparados para ello. La causa más común que obliga a usar este tipo de virtualización
+	es la ejecución de programas que requieren un sistema operativo distinto al que se tiene en la máquina de origen. Para salvar este inconveniente se tienen dos soluciones,
+	incluir un paquete con el software mínimo necesario del sistema operativo o usar un servidor que mantenga la aplicación.
+	
+	\item \textbf{Virtualización de Escritorio}
+	
+	En caso de que la virtualización anterior no cubra nuestras necesidades, la virtualización de escritorio es el siguiente nivel. En lugar de mantener la aplicación, 
+	dispone un escritorio con el sistema operativo requerido.
+	
+	\item \textbf{Virtualización de Servidor}
+	
+	La virtualización server permite la separación del hardware y el sistema operativo, lo que nos da la posibilidad de tratar a la máquina virtual como un archivo.
+	Esto facilita la redundancia y la expansiblidad del sistema. Es especialmente prático cuando se tiene fluctuaciones en el uso.
+	
+	\item \textbf{Virtualización de Almacenamiento}
+	
+	Permite administrar datos provenientes de distintas fuentes en un solo dispositivo de almacenamiento. Los datos se almacenan en un solo repositorio, 
+ aunque pueden ser accedidos desde muchos.
+	
+	\item \textbf{Virtualización de Red}
+	
+	Este tipo de virtualización nos ofrece la posibilidad de alterar una red de máquinas conectadas sin cambiar la disposición física de las mismas, es decir, se
+	pueden implementar switches, routers o firewalls sin tener acceso a la red física del conjunto.
+	
+\end{itemize}
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 2
+%----------------------------------------------------------------------------------------
+
+\section{Muestre los precios y características de varios proveedores de VPS (Virtual Pirvate Server) y compare con el precio
+de servidores dedicados (administrados y no administrados). Comente diferencias.}
+
+
+Tal y como observamos en la Figura \ref{fig:figura1} en comparación con la Figura \ref{fig:figura2}, los servidores dedicados son mucho más
+caros que los VPS. La virtualización supone un decremento de las prestaciones frente al servidor dedicado pero son mucho más manejables y ligeros que los servidores 
+convencionales. La causa de esta diferencia de precio también puede ser debida al mantenimiento. Mantener un VPS es menos costoso y, en caso de que falle, puede ser ejecutado
+rápidamente por otra máquina. Por otro lado, en caso de fallo del servidor dedicado, la suplantación es más complicada. Como el servicio está garantizado 24 horas, el servidor
+dedicado requiere una configuración más complicada y más cara.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura1.png}  
+\caption{Precios VPS en OVH \cite{figura1} Consultado el 1 de Marzo de 2017.} \label{fig:figura1}
+\end{figure}
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura2.png} 
+\caption{Precios Servidor dedicado en OVH \cite{figura2} Consultado el 1 de Marzo de 2017.} \label{fig:figura2}
+\end{figure}
+%------------------------------------------------
+
+Así mismo, en Vpsnet obtenemos las mismas conclusiones, los servidores dedicados ofrecen mejores prestaciones pero a un precio bastante mayor. Con este segundo servicio 
+obtenemos servidores más potentes en general, aunque esto conlleva un coste económico mayor. Se puede observar en la Figura \ref{fig:figura3} y la Figura \ref{fig:figura4}.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.4]{Figura3.png}
+\caption{Precios VPS en Vpsnet \cite{figura3} Consultado el 1 de Marzo de 2017.} \label{fig:figura3}
+\end{figure}
+\begin{figure}
+\centering
+\includegraphics[scale=0.4]{Figura4.png} 
+\caption{Precios Servidor dedicado en Vpsnet \cite{figura4} Consultado el 1 de Marzo de 2017.} \label{fig:figura4}
+\end{figure}
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 3
+%----------------------------------------------------------------------------------------
+
+\section{Enumere y explique brevemente al menos tres de las innovaciones en Windows Server 2016 y 2012 R2 
+respecto a 2008R2.}
+
+Windows Server 2012R2 posee numerosas 
+actualizaciones\footnote{Todas las características expuestas y más se encuentran detalladas en \url{https://technet.microsoft.com/es-es/library/dn250019(v=ws.11).aspx}} 
+de seguridad, escalabilidad y robustez así como novedades en la funcionalidad. Algunas de ellas son:
+
+	\begin{itemize}
+		\item \textbf{BitLocker.} Ahora admite el cifrado de dispositivos en equipos basados en x86 y x64, es decir, permite cifrar las unidades de disco duro del equipo.
+		\item \textbf{DHCP.} Se ha actualizado el protocolo DHCP para dar al usuario mas capacidad de configuración. Hay nuevos comandos para PowerShell.
+		\item \textbf{DNS.} El servidor DNS  ha mejorado el registro y el diagnóstico.  Además se ha mejorado la administración de las claves DNSSEC.
+	\end{itemize}
+
+De igual forma, las novedades de Windows Server 2016 pueden ser encontradas en la página oficial de 
+Microsoft\footnote{\url{https://technet.microsoft.com/es-es/windows-server-docs/get-started/what-s-new-in-windows-server-2016}}.
+Mencionamos algunas de ellas:
+
+	\begin{itemize}
+		\item \textbf{Protocolo TCP.} Se ha implementado el TCP Fast Open (TFO). Se reduce la cantidad de tiempo necesario para el establecimiento de conexión.
+		\item \textbf{Escritorio remoto.} La implementacion de una instancia de RDS de alta disponibilidad permite aprovechar
+		Azure SQL Database para los Agentes de conexión a Escritorio remoto en modo de alta disponibilidad.
+		\item \textbf{Credential Guard.} Credential Guard usa la seguridad basada en virtualización para aislar los secretos de 
+		forma que solo el software de sistema con privilegios pueda acceder a estos.
+	\end{itemize}
+
+\subsection{¿Que es Windows Server 2016 nano?}
+
+Como se especifica en los repositorios de Microsoft\footnote{\url{https://technet.microsoft.com/en-us/windows-server-docs/get-started/getting-started-with-nano-server}}, 
+Windows Server 2016 Nano es una opción de instalación de la versión 2016 optimizada para
+clouds privados y datacenters. Se asemeja al modo Core de Windows Server pero bastante más pequeño y solo con soporte para 64bits.
+
+
+
+%------------------------------------------------
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 4
+%----------------------------------------------------------------------------------------
+
+\section{¿Qué son los productos MAAS y Landscape ofrecidos por Canonical?}
+
+MAAS\cite{maas} (Metal As A Service) es un producto desarrollado por Canonical que permite el tratamiento de servidores físicos como 
+si fueran servidores en un cloud. Por lo tanto, permite destruir servidores o gestionar carga entre varias máquinas como si 
+se trataran de entornos virtuales. Viene con una interfaz web para administrar los servidores físicos asociados.
+
+\vspace{8mm}
+
+Landscape\cite{landscape} es una herramienta desarrollada por la misma empresa dedicada a gestionar y observar las estadísticas de los servidores de Ubuntu.
+Automatiza algunas tareas y alerta cuando ocurren acontecimientos especificados. Como el anterior, dispone de interfaz web para su gestión.
+
+%------------------------------------------------
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 5
+%----------------------------------------------------------------------------------------
+
+\section{¿Qué relación tiene la distribución CentOS con Red Hat y con el proyecto Fedora?}
+
+La empresa Red Hat propone en su plataforma\cite{redhat} un modelo de dos líneas de sistemas operativos. Por un lado, la empresa desarrolla el SO Red Hat con las garantías que
+supone estar diseñado por expertos del campo, por el otro lado, Fedora es un proyecto también de software abierto pero administrado por la comunidad. Así, la plataforma afirma,
+ambos proyectos se benefician el uno del otro.
+\textit{''Red Hat Enterprise Linux and Fedora enjoy a mutually beneficial relationship that ensures rapid innovation. Fedora benefits from the sponsorship and feedback from Red Hat. In turn, Red Hat can bring leading-edge innovation to the broader community for collaboration, enabling a rapid maturation of the technology''}, explican en la página oficial de la empresa.
+
+\vspace{8mm}
+
+En cuento a la distribución  CentOS, ha habido algo de controversión por numerosos rumores en la red. La página oficial apuesta por la unión y el refuerzo de proyectos y, ya que
+ CentOS es un proyecto de comunidad, la empresa Red Hat se compromete a darle estabilidad,
+\textit{''Red Hat will contribute its resources and expertise in building thriving open source communities to the new CentOS Project to help establish more open project governance and a roadmap''}
+
+\vspace{8mm}
+
+Cuando se cuestiona la relación entre los tres proyectos Red Hat afirma que CentOS supone la unión definitiva entre Red Hat y Fedora aportando una gran comunidad a la alianza,
+\textit{''CentOS fills a gap between our commercial deployment and community innovation platforms, offering community-oriented users a way to develop and adopt open source technologies on a distribution that’s more consistent and conservative than what’s required for Fedora’s innovation role.''}\footnote{\url{https://community.redhat.com/centos-faq/}}
+
+
+%------------------------------------------------
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 6
+%----------------------------------------------------------------------------------------
+
+\section{¿Qué diferencias hay entre RAID mediante SW y mediante HW?}
+
+Como menciona Red Hat en su documentación\cite{raids} un RAID basado en hardware subsiste independientemente del sistema que lo use.
+De hecho, para el sistema usuario del RAID, solo existe un único disco por cada RAID array.
+Los sistemas hardware son más caros, ya que requieren de herramientas especiales como son los chasis hot-swap o un controlador de múltiples discos,
+además de los discos físicos. No obstante, disponer de un sistema RAID basado en hardware suele ser más seguro en cuanto a durabilidad y redundancia.
+
+\vspace{8mm}
+
+En el otro lado encontramos los RAIDs gestionados por el software. Funcionan con casi cualquier tipo de disco y, la mayoría de 
+los SO tienen esta opción disponible. Son bastante más baratos que los hardware y, con los ordenadores de CPU rápida actuales,
+las prestaciones pueden ser mejores que en el primer caso. El principal problema es un fallo crítico en el SO que, en determinadas circunstancias, podría hacer perder 
+la información redundante.
+
+%------------------------------------------------
+
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 7
+%----------------------------------------------------------------------------------------
+
+\section{¿Qué es LVM?}
+Las siglas LVM corresponden con \textit{''Logical Volume Manager''} para Linux o, lo que es lo mismo, asistente de volúmenes lógicos para Linux\cite{lvm}.
+Un asistente de volúmenes lógicos permite controlar desde alto nivel el almacenamiento de los discos de un sistema y le da al administrador flexibilidad
+a la hora de gestionar el espacio en la misma. Con este tipo de herramientas se pueden eliminar, ampliar o encoger particiones de disco 
+sin necesidad de formatear. 
+
+\vspace{6mm}
+
+\subsection{¿Qué ventaja tiene para un servidor de gama baja?}
+
+Tal y como se menciona en el LVM HOWTO\cite{lvm} de Red Hat, en los sistemas de gama baja es de especial utilidad debido a la versatilidad de las particiones.
+Al iniciar una máquina por primera vez debemos preguntarnos qué espacio tendríamos que darle a cada partición y cuántas particiones nos serían de utilidad.
+Al cabo del tiempo, las necesidades de la máquna pueden variar o, incluso, puede darse el caso de una ampliación del sistema con un nuevo disco de almacenamiento.
+Usando LVM para gestionar el espacio se puede cambiar fácilmente el espacio asignado a cada disco sin obligarnos por ello a eliminar datos formateando el disco entero. 
+
+\vspace{6mm}
+
+\subsection{Si va a tener un servidor web, ¿le daría un tamaño grande o pequeño a /var?}
+
+Muchos servidores web guardan la información en el directorio /var\cite{dir}, por ejemplo un servidor apache\cite{apache}. Aunque el directorio de almacenaje se puede cambiar,
+supondremos que para este ejercicio la información se va a guardar en /var y, por lo tanto, el contenido del servidor web, esto incluye archivos multimedia, estarán
+almacenados aquí. Luego en un principio la máquina debería tener reservado un tamaño considerable para /var, aunque esto depende del tipo de servidor web.
+
+%------------------------------------------------
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 8
+%----------------------------------------------------------------------------------------
+
+\section{¿Debemos cifrar el volumen que contiene el espacio para swap?}
+
+El volumen que contiene el espacio para swap será utilizado por el SO para albergar información que, por motivos de espacio, no puede encontrarse en la RAM\cite{swap}.
+Es por tanto posible contenedor de información sensible y debe ser cifrado para proteger el sistema.
+
+\subsection{¿y el volumen en el que montaremos /boot?}
+
+Al contrario que en el espacio para swap, el volumen reservado para /boot\cite{dir} no contiene información sensible, tan solo tiene directivas e información para arrancar
+el sistema. A esta partición se accede antes que a ningún programa luego no es necesario encriptarla. Además, de hacerlo se provocaría un retardo al iniciar la máquina 
+ocasionado por el tiempo de desencriptamiento.
+
+
+%------------------------------------------------
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 9
+%----------------------------------------------------------------------------------------
+
+\section{Imagine que tiene un disco híbrido con tecnología SSD. ¿Qué puntos de montaje ubicaría en este?}
+
+Un disco con tecnología SSD\footnote{FAQ de SSD de Dell: \url{http://www.dell.com/downloads/global/products/pvaul/en/Solid-State-Drive-FAQ-us.pdf}}
+es notablemente más rápido  que uno HDD a la hora de realizar operaciones de lectura/escritura en disco.
+Según el tipo de máquina que se quiera montar se podría almacenar en el SSD distintas partes. Principalmente introduciría las partes 
+que son accedidas con más frecuencia o que necesitan de una respuesta rápida, luego es una buena idea ubicar el software que se
+ejecute a menudo y no la parte de datos o contenido multimedia. Por ejemplo en los sistemas basados en Linux, el directorio /bin contiene gran cantidad 
+de archivos binarios. Eventualmente se podría colocar también el directorio /var si se tiene un servidor web. Si, en otro supuesto, se quisiera tener una máquina de
+arranque rápido, se podría situar en la parte SSD el punto de montaje /boot. \\
+
+No obstante, el área de intercambio\cite{dir} es el espacio más propicio para situar en el SSD, ya que es, por así decirlo, la ampliación de la RAM cuando esta se queda 
+sin espacio. El contenido de los distintos directorios está analizado con detenimiento en la documentación de los distintos sistemas operativos.
+
+\subsection{Justifique qué tipo de sistema de archivos usaría para tener un servidor de streaming}
+
+En el manual de ArchLinux\cite{XFS} en el que se especifican muchos de los sistemas de archivos se explica: \textit{''[...]XFS is particularly proficient at parallel IO due to its allocation group based design. This enables extreme scalability of IO threads, filesystem bandwidth, file and filesystem size when spanning multiple storage devices.''}.\\
+Por tanto, la estructura XFS es la más indicada para alojar un servidor de streaming\cite{streaming}, ya que es especialmente eficiente para actividades de entrada/salida y movimiento de archivos 
+de grandes dimensiones.
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 10
+%----------------------------------------------------------------------------------------
+
+\section{Muestre cómo ha quedado el disco particionado una vez el sistema está instalado y ha iniciado sesión.}
+
+Una vez terminada la instalación y entrando en nuestro usuario, tras ejecutar el comando \textit{lsblk} obtenemos el árbol de particiones. Como se puede 
+ver en la Figura \ref{fig:figura5} tenemos las tres particiones con sistema de archivos ext4 y una más para la zona swap. 
+Asímismo vemos el RAID realizado sobre la zona de memoria.
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{Figura5.png} 
+\caption{Captura de pantalla mostrando particiones.} \label{fig:figura5}
+\end{figure}
+
+%------------------------------------------------
+
+
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 11
+%----------------------------------------------------------------------------------------
+
+\section{¿Cómo ha hecho el disco 2 ''arrancable''?}
+
+Para hacer el segundo disco arrancable es necesario instalar grub en el otro disco. Para ello basta con ejecutar un comando en modo superusuario como se muestra en la 
+Figura \ref{fig:figura8}. Con grub instalado en el segundo disco y desconectando el primero podemos comprobar que funciona y tiene los mismos datos que el primero por estar en
+un RAID1.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{Figura8.png} 
+\caption{Captura de pantalla mostrando la instalación de grub en el disco 2.} \label{fig:figura8}
+\end{figure}
+
+\subsection{¿Qué hace el comando grub-install?}
+
+Como se especifica en el manual en linea de consultado en el terminal, grub-install copia las imagenes de grub en el directorio especificado y lo coloca en el sector /boot. Permite
+establecer un "software'' de elección de arranque, es especialmente útil cuando varios sistemas operativos conviven en los discos de la misma máquina.
+
+
+
+%------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	Cuestión Opcional 1
+%----------------------------------------------------------------------------------------
+
+\section{(Opcional 1) Muestre cómo ha comprobado que el RAID1 funciona}
+
+Desde el software de virtualización debemos quitar el primer disco como se muestra en la Figura \ref{fig:figura9}. Esto hará que se ejecute directamente el disco 2 que, en el ejercicio
+anterior, vimos como se hacía arrancable.
+
+\vspace{5mm}
+
+Como sendos discos estaban situados en un RAID, al iniciar el sistema operativo desde el disco secundario nos encontraremos un mensaje de error debido a la imposibilidad de
+encontrar el otro disco. Este error fue reproducido en clase por el profesor Alberto Guillén con mi máquina virtual. A causa de esto, no pude hacer capturas de pantalla del proceso,
+no obstante, describiré el proceso y mostraré el resultado.\\
+
+\vspace{5mm}
+
+Tras aparecer el error en pantalla, después de esperar unos 5 o 10 minutos, el sistema operativo nos dejará una linea de comandos desde la cual podremos solventar el problema
+de los discos en RAID. Con el comando \textit{cat /proc/mdstat} podremos ver que el disco detectado ha sido deshabilitado. Podemos forzar la habilitación del disco a pesar de que 
+el otro disco del RAID no esté. Con el comando mdadm\cite{mdadm} y la opcion \textit{-R} podemos forzar el arranque de un disco. Al salir ahora de la terminal, se iniciará el proceso
+de arranque. \\
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{Figura9.png} 
+\caption{Captura de pantalla mostrando la desconexión de un disco.} \label{fig:figura9}
+\end{figure}
+
+
+
+Hay un pequeño problema con el sistema operativo al hacer esta operación. Al iniciar la máquina habremos perdido información del disco que estaba no disponible y, en caso 
+de volver a conectarlo e iniciar la máquina con los dos discos, no nos aparecerán las particiones. Este hecho es un fallo del SO y puede verse en la figura \ref{fig:figura10}.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.7]{Figura10.png} 
+\caption{Captura de pantalla mostrando el error de disco.} \label{fig:figura10}
+\end{figure}
+
+
+%------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 12
+%----------------------------------------------------------------------------------------
+
+\section{¿Qué diferencia hay entre Standard y Datacenter?}
+
+Como se puede ver en la tabla sacada de los archivos\cite{tabstddat} de dominio de Microsoft, la edición Datacenter de Windows Server 2008 R2 tiene
+más herramientas que la edición Standard. Por ejemplo, Datacenter tiene soporte para memoria hot-swap así como licencias ilimitadas para imágenes virtuales, sin embargo, la 
+edición Standard solo tiene licencia para una. El resto de especificaciones pueden verse en la tabla \ref{tab:StdvsDatacenter}.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|l|c|c|}
+\hline
+\textbf{ Specification} & \textbf{Standard} & \textbf{Datacenter} \\
+\hline
+Cross-File Replication & No & Yes \\
+Failover Cluster Nodes & No & 16 \\
+Fault Tolerant Memory Sync & No & Yes \\
+Hot Add Memory & No & Yes \\
+Hot Add Processors & No & Yes \\
+Hot Replace Memory & No & Yes \\
+Hot Replace Processors & No & Yes \\
+IAS & 50 & Unlimited \\
+RRAS & 250 & Unlimited \\
+Remote Desktop Services Gateway & 250 & Unlimited \\
+Virtual Image Use Rights & Host + 1 VM & Unlimited \\
+X64 RAM & 32GB & 2TB \\
+X64 Sockets & 4 & 64 \\
+\hline
+\end{tabular}  
+\caption{Diferencias entre edición Standard y Datacenter.} \label{tab:StdvsDatacenter}
+\end{table}
+
+
+%------------------------------------------------
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 13
+%----------------------------------------------------------------------------------------
+
+\section{Muestre el proceso de definición de RAID1 para dos discos de 100MiB con capturas de pantalla.}
+
+Todo el proceso puede verse en la Figura \ref{fig:figura6}. En primer lugar, abrimos el administrador de equipos en el que aparecerán los discos de nuestra máquina virtual. 
+Previamente hemos añadido dos discos de 100MB cada uno a la máquina desde Virtual Box. Seleccionando uno de los discos libres nos saldrá la opción de crear volumen 
+reflejado (Raid1 en Windows). Seleccionamos los dos discos que tenemos libres para hacer un raid entre estos. Tras esto, nos dará opciones para renombrar los discos y 
+formatearlos. Elegimos nuestra opción y al aceptar empezará con el proceso de creación.
+
+\vspace{8mm}
+
+Al acabar el proceso de creación, en el apartado de administrador de equipos, veremos ahora los dos discos marcados como volúmenes reflejados. Nótese que antes del proceso
+estaban marcados como volúmenes no utilizados. Puede observar el resultado en la Figura \ref{fig:figura7} ya terminado.
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.28]{Figura6.png}
+\caption{Capturas de pantalla de creación de un Raid1. Impreso el 12 de Marzo de 2017.} \label{fig:figura6}
+\end{figure}
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{Figura7.png} 
+\caption{Captura de pantalla de Raid1 creado. Realizada el 12 de Marzo de 2017.} \label{fig:figura7}
+\end{figure}
+
+
+%------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 14
+%----------------------------------------------------------------------------------------
+
+\section{Explique brevemente qué diferencias hay entre los tres tipos de conexión que permite el VMSW para las Mvs: NAT, Host-only y Bridge.} 
+
+El manual de Virtual Box explica bien las diferencias entre los tres tipos de conexión además de otros 4 tipos específicos de este software en su manual\cite{networking}. 
+\begin{itemize}
+\item \textbf{NAT}. La conexión NAT conecta con la tarjeta de red de la máquina que virtualiza con la máquina virtualizada, permitiendo que la virtualizada 
+acceda a los servicios de la red. Es la que viene habilitada por defecto en las máquinas de Virtual Box.
+\item \textbf{Host-only}. Este tipo de conexión está orientado a realizar redes entre la máquina host y un conjunto de máquinas virtuales, estableciendo conectividad entre ellas sin
+tener por qué tener un dispositivo físico que las conecte.
+\item \textbf{Bridge}. Con una conexión Bridge se conecta la máquina virtual directamente con una de las tarjetas de red de la máquina host, es decir, permite intercambiar paquetes 
+de red entre la máquina virtual y la tarjeta de red sin necesidad de pasar por el sistema operativo de la máquina host.
+\end{itemize}
+
+
+
+
+%------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	Cuestión Opcional 2
+%----------------------------------------------------------------------------------------
+
+\section{(Opcional 2) ¿Qué relación hay entre los atajos de teclado de emacs y los de la consola bash?¿Y entre los de vi y las páginas del manual?} 
+
+
+\begin{itemize}
+\item \textbf{Relación entre emacs y bash}. \\ 
+Tanto emacs\cite{emacs} como bash \cite{bash} son del proyecto GNU. Tal y como dice la documentación de emacs, este está preparado para ejecutarse en varias shells, por
+ejemplo bash, csh y zsh. La mayoría de los atajos que coinciden pertenecen a la rama de movimiento del cursor y a la rama de edición. Pueden verse más ejemplos en la 
+documentación de bash mecionada anteriormente. 
+\item \textbf{Relación entre las páginas del manual y vi}.\\
+ En cuanto a los atajos de vi, que pueden ser consultados en numerosas documentaciones\cite{vi}, y los atajos del manual, que de forma semejante se encuentran en su 
+documentación\cite{manman}, no he encontrado ninguna información que los relacione. No obstante hay múltiples coincidencias entre sendos programas, por ejemplo:
+	\begin{itemize}
+		\item \textbf{h}. Muestra la ayuda.
+		\item \textbf{Barra espaciadora}. Muestra más.
+		\item \textbf{q}. Interrumpir el programa.
+	\end{itemize}
+\end{itemize}
+
+%------------------------------------------------
+
+\newpage
+
+\bibliography{citando} %archivo citas.bib que contiene las entradas 
+\bibliographystyle{plain} % hay varias formas de citar
+
+\end{document}

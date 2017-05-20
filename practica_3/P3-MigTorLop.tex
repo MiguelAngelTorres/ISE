@@ -1,0 +1,520 @@
+\input{preambuloSimple.tex}
+\usepackage{listings}
+
+
+%----------------------------------------------------------------------------------------
+%	TÍTULO Y DATOS DEL ALUMNO
+%----------------------------------------------------------------------------------------
+
+\title{	
+\normalfont \normalsize 
+\textsc{\textbf{Ingeniería de Servidores (2016-2017)} \\ Doble grado en Ingeniería Informática y Matemáticas \\ Universidad de Granada} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{2pt} \\[0.4cm] % Thin top horizontal rule
+\huge Memoria Práctica 3 \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Miguel Ángel Torres López} % Nombre y apellidos
+
+\date{\normalsize\today} % Incluye la fecha actual
+
+%----------------------------------------------------------------------------------------
+% DOCUMENTO
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Muestra el Título
+
+\newpage %inserta un salto de página
+
+\tableofcontents % para generar el índice de contenidos
+
+\newpage
+
+\listoffigures
+
+\listoftables
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 1
+%----------------------------------------------------------------------------------------
+
+\section{El subsistema de archivos}
+
+%------------------------------------------------
+\subsection{¿Qué archivo le permite ver qué programas se han instalado con el gestor de paquetes?}
+
+Como se menciona la documentación de Debian\cite{logpack} en el directorio \url{/var/log} se encuentran los archivos de tipo log, es decir, los archivos que guardan el 
+historial de algunos datos del sistema y otros programas importantes. En nuestro caso nos interesa mirar dos archivos, ambos pueden verse en las 
+Figuras \ref{fig:figura1} y \ref{fig:figura2}.  El archivo \url{/var/log/apt/history.log} guarda la información referente a antiguas ejecuciones de apt ordenadas por fecha.
+El otro archivo, \url{/var/log/dpkg.log} contiene información referente al comando dpkg, la herramienta básica para instalar paquetes.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura1.png}  
+\caption{Archivos log de dpkg.}\label{fig:figura1}
+\end{figure}
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura2.png}  
+\caption{Archivos log de apt.}\label{fig:figura2}
+\end{figure}
+
+
+\subsection{¿Qué significan las terminaciones .1.gz o .2.gz de los archivos en ese directorio?}
+
+En ocasiones, los archivos \textit{log} o archivos de historial pueden ocupar bastante espacio, más aun si estamos hablando de un servicio usado por terceros. Por este
+motivo, los archivos log suelen comprimirse y así ahorrar algo de espacio en disco. La terminacion .gz hace referencia a la compresión con gzip y la numeración indica
+el orden de antigüedad. Como ejemplo de esta práctica, podemos ver el comando \textit{logrotate}\cite{logrotate}, útil cuando se quiere administrar de forma rápida y 
+automática la compresión de archivos de historial.
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 2
+%----------------------------------------------------------------------------------------
+
+\section{Pruebe a ejecutar el comando dmesg, conectar un dispositivo USB y vuelva a ejecutar el comando. Copie y pegue la salida del comando. Comente qué observe en la información mostrada.}
+
+El comando dmesg\cite{dmesgman} sin argumentos puede servirnos para ver información de un USB y de otras muchas características.  
+Con el motivo de evitar grandes cantidades de texto ilegibles, tras ejecutar el comando dmesg con y sin USB conectado, he realizado un filtrado con el comando awk
+para que solo puedan verse las lineas en las que aparece la palabra usb, como puede verse en la Figura \ref{fig:figura3}. Los dos ficheros de texto pueden verse a 
+continuación de ésta.
+
+Podemos ver distintos dispositivos USB pero nos interesan principalmente las últimas lineas del archivo. Podemos ver que hay un dispositivo definido como device 5
+que corresponde con un móvil de Samsung. En la última línea se especifica que el dispositivo 5 está desconectado. De la misma forma, en el segundo archivo, 
+realizado con el móvil conectado por USB, podemos ver los mismos datos del dispositivo 5. No obstante, esta vez en la última línea ya no está el comentario que se
+hacia antes por la desconexión del USB. 
+
+\vspace{5mm}
+
+Cabe destacar que en el archivo en el que el móvil está desconectado el sistema operativo ya conoce el dispositivo móvil porque éste había sido conectado con 
+anterioridad. En caso de no conocerlo, no se tendría registrada la información que aparece de éste.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura3.png}  
+\caption{Filtrado de la información dada por dmesg.}\label{fig:figura3}
+\end{figure}
+
+\textbf{SinUsbFiltrado.txt}
+
+\begin{verbatim}
+[    0.223866] usbcore: registered new interface driver usbfs
+[    0.223874] usbcore: registered new interface driver hub
+[    0.223889] usbcore: registered new device driver usb
+[    0.836243] usb usb1: New USB device found, idVendor=1d6b, idProduct=0002
+[    0.836246] usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    0.836248] usb usb1: Product: EHCI Host Controller
+[    0.836259] usb usb1: Manufacturer: Linux 4.4.0-75-generic ehci_hcd
+[    0.836260] usb usb1: SerialNumber: 0000:00:1d.0
+[    0.838022] usb usb2: New USB device found, idVendor=1d6b, idProduct=0002
+[    0.838025] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    0.838027] usb usb2: Product: xHCI Host Controller
+[    0.838028] usb usb2: Manufacturer: Linux 4.4.0-75-generic xhci-hcd
+[    0.838030] usb usb2: SerialNumber: 0000:00:14.0
+[    0.839765] usb usb3: New USB device found, idVendor=1d6b, idProduct=0003
+[    0.839766] usb usb3: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    0.839767] usb usb3: Product: xHCI Host Controller
+[    0.839769] usb usb3: Manufacturer: Linux 4.4.0-75-generic xhci-hcd
+[    0.839770] usb usb3: SerialNumber: 0000:00:14.0
+[    0.840303] usb: port power management may be unreliable
+[    1.147926] usb 2-3: new low-speed USB device number 2 using xhci_hcd
+[    1.147928] usb 1-1: new high-speed USB device number 2 using ehci-pci
+[    1.279619] usb 2-3: New USB device found, idVendor=093a, idProduct=2510
+[    1.279622] usb 2-3: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[    1.279624] usb 2-3: Product: USB Optical Mouse
+[    1.279625] usb 2-3: Manufacturer: PixArt
+[    1.279795] usb 2-3: ep 0x81 - rounding interval to 64 microframes
+[    1.280270] usb 1-1: New USB device found, idVendor=8087, idProduct=8001
+[    1.280272] usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+[    1.395975] usb 2-5: new full-speed USB device number 3 using xhci_hcd
+[    1.580909] usb 2-5: New USB device found, idVendor=8087, idProduct=07dc
+[    1.580912] usb 2-5: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+[    1.747927] usb 2-6: new high-speed USB device number 4 using xhci_hcd
+[    1.977798] usb 2-6: New USB device found, idVendor=13d3, idProduct=5652
+[    1.977801] usb 2-6: New USB device strings: Mfr=3, Product=1, SerialNumber=2
+[    1.977803] usb 2-6: Product: TOSHIBA Web Camera - HD
+[    1.977805] usb 2-6: Manufacturer: Azurewave
+[    1.977806] usb 2-6: SerialNumber: NULL
+[    1.985006] usbcore: registered new interface driver usbhid
+[    1.985008] usbhid: USB HID core driver
+[    1.986362] input: PixArt USB Mouse as 
+/devices/pci0000:00/0000:00:14.0/usb2/2-3/2-3:1.0/0003:093A:2510.0001/input/input11
+[    1.986497] hid-generic 0003:093A:2510.0001: input,hidraw0: 
+USB HID v1.11 Mouse [PixArt USB Mouse] on usb-0000:00:14.0-3/input0
+[    3.085368] toshiba_acpi: Supported laptop features: hotkeys touchpad usb-sleep-charge
+[    3.204720] usbcore: registered new interface driver btusb
+[    3.208107] input: TOSHIBA Web Camera - HD as 
+/devices/pci0000:00/0000:00:14.0/usb2/2-6/2-6:1.0/input/input17
+[    3.208173] usbcore: registered new interface driver uvcvideo
+[    3.318285] usb 2-5: USB disconnect, device number 3
+[  990.006691] usb 2-1: new high-speed USB device number 5 using xhci_hcd
+[  990.136512] usb 2-1: New USB device found, idVendor=04e8, idProduct=6860
+[  990.136515] usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[  990.136517] usb 2-1: Product: SAMSUNG_Android
+[  990.136518] usb 2-1: Manufacturer: SAMSUNG
+[  990.136520] usb 2-1: SerialNumber: 3444c25d
+[ 1163.377557] usb 2-1: USB disconnect, device number 5
+\end{verbatim}
+
+\textbf{ConUsbFiltrado.txt}
+
+\begin{verbatim}
+[    0.223866] usbcore: registered new interface driver usbfs
+[    0.223874] usbcore: registered new interface driver hub
+[    0.223889] usbcore: registered new device driver usb
+[    0.836243] usb usb1: New USB device found, idVendor=1d6b, idProduct=0002
+[    0.836246] usb usb1: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    0.836248] usb usb1: Product: EHCI Host Controller
+[    0.836259] usb usb1: Manufacturer: Linux 4.4.0-75-generic ehci_hcd
+[    0.836260] usb usb1: SerialNumber: 0000:00:1d.0
+[    0.838022] usb usb2: New USB device found, idVendor=1d6b, idProduct=0002
+[    0.838025] usb usb2: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    0.838027] usb usb2: Product: xHCI Host Controller
+[    0.838028] usb usb2: Manufacturer: Linux 4.4.0-75-generic xhci-hcd
+[    0.838030] usb usb2: SerialNumber: 0000:00:14.0
+[    0.839765] usb usb3: New USB device found, idVendor=1d6b, idProduct=0003
+[    0.839766] usb usb3: New USB device strings: Mfr=3, Product=2, SerialNumber=1
+[    0.839767] usb usb3: Product: xHCI Host Controller
+[    0.839769] usb usb3: Manufacturer: Linux 4.4.0-75-generic xhci-hcd
+[    0.839770] usb usb3: SerialNumber: 0000:00:14.0
+[    0.840303] usb: port power management may be unreliable
+[    1.147926] usb 2-3: new low-speed USB device number 2 using xhci_hcd
+[    1.147928] usb 1-1: new high-speed USB device number 2 using ehci-pci
+[    1.279619] usb 2-3: New USB device found, idVendor=093a, idProduct=2510
+[    1.279622] usb 2-3: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[    1.279624] usb 2-3: Product: USB Optical Mouse
+[    1.279625] usb 2-3: Manufacturer: PixArt
+[    1.279795] usb 2-3: ep 0x81 - rounding interval to 64 microframes
+[    1.280270] usb 1-1: New USB device found, idVendor=8087, idProduct=8001
+[    1.280272] usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+[    1.395975] usb 2-5: new full-speed USB device number 3 using xhci_hcd
+[    1.580909] usb 2-5: New USB device found, idVendor=8087, idProduct=07dc
+[    1.580912] usb 2-5: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+[    1.747927] usb 2-6: new high-speed USB device number 4 using xhci_hcd
+[    1.977798] usb 2-6: New USB device found, idVendor=13d3, idProduct=5652
+[    1.977801] usb 2-6: New USB device strings: Mfr=3, Product=1, SerialNumber=2
+[    1.977803] usb 2-6: Product: TOSHIBA Web Camera - HD
+[    1.977805] usb 2-6: Manufacturer: Azurewave
+[    1.977806] usb 2-6: SerialNumber: NULL
+[    1.985006] usbcore: registered new interface driver usbhid
+[    1.985008] usbhid: USB HID core driver
+[    1.986362] input: PixArt USB Mouse as 
+/devices/pci0000:00/0000:00:14.0/usb2/2-3/2-3:1.0/0003:093A:2510.0001/input/input11
+[    1.986497] hid-generic 0003:093A:2510.0001: input,hidraw0: 
+USB HID v1.11 Mouse [PixArt USB Mouse] on usb-0000:00:14.0-3/input0
+[    3.085368] toshiba_acpi: Supported laptop features: hotkeys touchpad usb-sleep-charge 
+[    3.204720] usbcore: registered new interface driver btusb
+[    3.208107] input: TOSHIBA Web Camera - HD as 
+/devices/pci0000:00/0000:00:14.0/usb2/2-6/2-6:1.0/input/input17
+[    3.208173] usbcore: registered new interface driver uvcvideo
+[    3.318285] usb 2-5: USB disconnect, device number 3
+[  990.006691] usb 2-1: new high-speed USB device number 5 using xhci_hcd
+[  990.136512] usb 2-1: New USB device found, idVendor=04e8, idProduct=6860
+[  990.136515] usb 2-1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[  990.136517] usb 2-1: Product: SAMSUNG_Android
+[  990.136518] usb 2-1: Manufacturer: SAMSUNG
+[  990.136520] usb 2-1: SerialNumber: 3444c25d
+\end{verbatim}
+%------------------------------------------------
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 3
+%----------------------------------------------------------------------------------------
+
+\section{Ejecute el monitor de \textit{"System Perfomance"} y muestre el resultado. Incluya capturas de pantalla comentando la información que aparece.}
+
+Abriendo la consola de PowerShell y ejecutando el comando \textit{perfmon} se abre el monitor de \textit{''System Perfomance''}. Se mostrará una página de inicio con
+información básica y varios enlaces a documentación y ayuda, como puede verse en la Figura \ref{fig:figura4}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura4.png}  
+\caption{Página inicial de perfmon.}\label{fig:figura4}
+\end{figure}
+
+Se puede navegar un poco por la interfaz gráfica del monitor y, en la pestaña de monitor de rendimiento, observamos una gráfica en la que se puede hacer
+seguimiento en el tiempo de distintas características del sistema. Por defecto tenemos un histograma que mide el porcentaje de CPU consumida, 
+además tenemos datos del promedio en los últimos minutos de esta característica. Se puede ver esta ventana en la Figura \ref{fig:figura5}. Observamos que en 
+mitad de la gráfica hay un pico de subida de CPU usada. Este pico corresponde a la ejecución del buscador de internet, podemos ver cómo al cerrar el buscador, 
+la gráfica baja otra vez a los datos anteriores.
+
+\vspace{5mm}
+
+Para mostrar un ejemplo de su uso, añadiremos una característica más para inspeccionar. Al pulsar el icono de \textit{más}, se nos abre una ventana en la que 
+podremos elegir distintas características para añadir a inspección. Elegiremos, por ejemplo, añadir a la gráfica el porcentaje de bytes usados en memoria y, para
+poder comparlo bien con la característica anterior, activaremos los dos seguimientos en el desplegable de abajo y cambiaremos el modo gráfico a gráfica de barras.
+Los colores de cada característica se puede cambiar también. Tras hacer estos cambios, observamos que en nuestro monitor aparece algo parecido a 
+la Figura \ref{fig:figura6} 
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura5.png}  
+\caption{Gráfica de monitorización de características.}\label{fig:figura5}
+\end{figure}
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura6.png}  
+\caption{Monitorizando varias características en la misma gráfica.}\label{fig:figura6}
+\end{figure}
+
+%------------------------------------------------
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 4
+%----------------------------------------------------------------------------------------
+
+\section{Cree un recopilador de datos definido por el usuario (modo avanzado) que incluya tanto el contador de rendimiento como los datos de seguimiento: Todos los referentes al procesado y al servicio web, intervalo de muestra 5 segundos. Almacene el resultado en el directorio Escritorio/logs.}
+
+En primer lugar nos vamos a la pestaña de recopiladores de datos de usuario que, en principio estará vacía. Hacemos click secundario y creamos un recopilador como
+se muestra en la Figura \ref{fig:figura7}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura7.png}  
+\caption{Creando un recopilador. Parte 1.}\label{fig:figura7}
+\end{figure}
+
+Nos aparecerán ahora una serie de ventanas que nos permitirán personalizar nuestro recopilador. Selecionamos datos de seguimiento y contador de rendimiento en la
+primera ventana, como se muestra en la Figura \ref{fig:figura8}
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura8.png}  
+\caption{Creando un recopilador. Parte 2.}\label{fig:figura8}
+\end{figure}
+
+Ahora elegimos los datos a recopilar, en nuestro caso todos los referentes al procesado y al servicio web.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura9.png}  
+\caption{Creando un recopilador. Parte 3.}\label{fig:figura9}
+\end{figure}
+
+Por último, elegimos el lugar donde queremos guardar todos los datos. Como se especifica en el ejercicio, los guardaremos en el Escritorio en un carpeta logs. 
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura10.png}  
+\caption{Creando un recopilador. Parte 4.}\label{fig:figura10}
+\end{figure}
+
+Como se puede ver en la Figura \ref{fig:figura11}, el recopilador empieza por defecto desactivado. Para activarlo y que empiece a recoger información es necesario 
+hacer click secundario sobre él e iniciarlo. En cualquier momento podemos cambiar sus preferencias en el mismo menú.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura11.png}  
+\caption{Creando un recopilador. Parte 5.}\label{fig:figura11}
+\end{figure}
+
+Una vez activado esperamos unos minutos para que recoja datos de nuestra máquina. Al parar el recolector de datos podemos ver el resultado de la ejecución.
+Vemos ahora en la Figura \ref{fig:figura22} la gráfica con todos los datos estudiados. Pero como trabajar con esta gráfica es algo incómodo debido a la cantidad de 
+gráficas superpuestas, vamos a desactivar todas las gráficas menos dos. El resultado puede verse en la Figura \ref{fig:figura23}. He elegido esas dos características 
+porque son complementarias. Una de ellas es el porcentaje de tiempo que la máquina está inactiva, la otra marca el porcentaje de tiempo que está activa. Puede verse 
+que ambas gráficas son complementarias.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura22.png}  
+\caption{Creando un recopilador. Parte 6.}\label{fig:figura22}
+\end{figure}
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura23.png}  
+\caption{Creando un recopilador. Parte 7.}\label{fig:figura23}
+\end{figure}
+
+%------------------------------------------------
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 5
+%----------------------------------------------------------------------------------------
+
+\section{Visite la web del proyecto y acceda a la demo que proporcionan donde se muestra cómo monitorizan un servidor. Monitorice varios parámetros y haga capturas de pantalla de lo que está mostrando comentando qué observa.}
+
+La web de Munin\cite{munin} ofrece una demo que muestra distintos mediciones de parámetros a lo largo de un dia, una semana, un mes o un año. Para mostrar un
+ejemplo, observaremos la información referente a los procesos. 
+
+\vspace{5mm}
+
+En primer lugar vemos que se nos aporta una gráfica\ref{fig:figura12} con el número de threads que tiene la máquina ejecutándose. Salvo variaciones de unos 10 
+procesos como máximo, vemos que el número se mantiene estable. Además los threads aumentan o disminuyen en paquetes, esto puede ser el resultado de ejecutar
+programas que dependen o dividen el trabajo en varios threads. Podemos ver, en la gráfica semanal, que el jueves hay durante unos minutos un pico notablemente más
+alto, puede que fuera una sobrecarga del sistema. Algo curioso, que no soy capaz de explicar, es la desaparición de los datos durante un par de horas. Los threads no
+parecen haber caido a 0, si no que siguen en la misma línea que los días anteriores, pero la gráfica sufre un corte alrededor de las 20:00 del viernes. 
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.45]{Figura12.png}  
+\caption{Threads ejecutándose en la máquina}\label{fig:figura12}
+\end{figure}
+
+Así mismo, disponemos de las gráficas correspondientes al mismo periodo de tiempo de los procesos de la máquina. Podemos ver, en la Figura \ref{fig:figura13}
+la misma idea que en la gráfica anterior. Se mantienen alrededor de los 75 procesos con variaciones que no exceden los 10 procesos. Observamos como el pico del
+jueves también aparece, lo que nos da a entender que en ese momento fue de gran actividad. De forma adicional al análisis anterior, ahora podemos detectar que
+la mayoría de los procesos en ejecución están en estado inactivo, tan solo unos cuantos permanecen en cada instante con la posibilidad de ser ejecutados. Esto puede
+ser un problema, pues quizás la máquina no esté aprovechándose al máximo. Para asegurarse, habría que analizar los datos de la CPU. Por último, me gustaría
+destacar que, otra vez, el viernes hay una pérdida de datos y la gráfica se corta. No parece que sea una caída del sistema, pues a continuación la gráfica tomaría un 
+tiempo de reactivación de los procesos y durante unos minutos la actividad sería menor. Más bien parece una interrupción de la monitorización.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.45]{Figura13.png}  
+\caption{Procesos ejecutándose en la máquina}\label{fig:figura13}
+\end{figure}
+
+%------------------------------------------------
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 6
+%----------------------------------------------------------------------------------------
+
+\section{Escribe un breve resumen sobre alguno de los artículos donde se muestra el uso de strace o busque otro y coméntelo.}
+
+Mostraremos un breve resumen sobre el segundo artículo\footnote{\url{http://blog.softlayer.com/2013/sysadmin-tips-and-tricks-using-strace-to-monitor-system-calls#utm_source=twitter&utm_medium=social&utm_content=beyond-the-command-line-with-strace&utm_campaign=blog_development-tips-and-tricks}} mencionado en el guión prácticas. 
+
+El artículo primero explica la naturaleza del uso de strace. Afirma que no es una herramienta para programadores sino para administradores de sistema, y que no hace
+falta tener grandes nociones de programación, tan solo unos comandos básicos de Linux. Strace no es un \textit{'debugger'}, solo es una herramienta para monitorizar
+las llamadas al sistema realizadas por el proceso. Para ejecutar strace sobre un proceso al que se quiere monitorizar, basta
+con \textit{adjuntar} la herramienta al proceso, en el artículo se detalla un ejemplo con el comando \textit{strace cat test.txt}, donde test.txt es un archivo con un par de 
+frases escritas. Al ejecutarlo, se puede ver que la ejecucion ha causado múltiples llamadas al sistema, algunas de ellas reconocibles de inmediato. Aparece la
+llamada \textit{open}, para abrir un archivo, la llamada \textit{nmap} para traer a memoria principal datos de disco, y una llamada \textit{close}, para cerrar el 
+archivo. Apoyandose en esta ejecución, se explican los elementos básicos del resultado de strace sobre un proceso. 
+
+\vspace{5mm}
+
+Para mostrar un ejemplo de la utilidad de strace, se plantea la siguiente cuestión, ¿cómo podemos ubicar los archivos de tipo log de un servicio en ejecución? 
+Supongamos que Apache está escribiendo los archivos log en algún lugar que no esperabamos y no encontramos la forma de averiguar dónde. Podemos ejecutar
+\textit{strace -Ff -o output.txt -e open /etc/init.d/httpd restart} para seguir las llamadas al sistema de tipo open en todas las hebras y guardarlas en el archivo output.txt
+Ahora podemos filtrar por la palabra log y encontraremos qué archivos está abriendo. 
+
+\vspace{5mm}
+
+Otra gran ventaja de strace es que está disponible para todas las distribuciones mayoritarias de Linux y es de sencilla instalación a partir del gestor de paquetes
+de la distribución en uso.
+
+%------------------------------------------------
+
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 7
+%----------------------------------------------------------------------------------------
+
+\section{Escriba un script en Python o PHP y analice su comportamiento usando el profiler presentado.}
+
+He creado un script básico con dos funciones. Una de ellas la ejecuto muchas veces, la otra solo una vez cuando el programa termina. Puede verse el código fuente en 
+la Figura \ref{fig:figura16}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.45]{Figura16.png}  
+\caption{Script Python de prueba.}\label{fig:figura16}
+\end{figure}
+
+Para ejecutar el programa de \textit{profiling} Cprofile\cite{pythonprofile} basta con el comando mostrado en la Figura \ref{fig:figura14}. Hay muchas otras formas de usar esta herramienta,
+aunque por motivos de simplicidad usaré esta para poder hacer el \textit{profile} a un script.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.45]{Figura14.png}  
+\caption{Profile de un script en Python}\label{fig:figura14}
+\end{figure}
+
+Podemos ver el resultado de la ejecución cuando termine el programa en la propia terminal. Observamos en la Figura \ref{fig:figura15} que nos salen datos de cada 
+función ejecutada en el script, obtenemos el tiempo consumido en cada función, el número de ejecuciones y el tiempo medio. En nuestro caso, vemos que hay una 
+función que se ejecuta muchas veces y por tanto su tiempo consumido es casi el total del script. La otra función sólo tiene una ejecución y el tiempo consumido es tan 
+pequeño que con la perdida por aproximación nos da 0. Existe la posibilidad de alterar Cprofile para que nos de otra información. Su uso es bastante sencillo, lo que 
+lo convierte en una herramienta práctica y rápida para optimizar cuellos de botella en programas pesados.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.45]{Figura15.png}  
+\caption{Salida del \textit{profile}.}\label{fig:figura15}
+\end{figure}
+
+%------------------------------------------------
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 8
+%----------------------------------------------------------------------------------------
+
+\section{Acceda a la consola mysql (o a través de phpMyAdmin) y muestre el resultado de mostrar el ''profile'' de una consulta (la creacion de la BD y la consulta la puede hacer libremente).}
+
+Desde phpMyAdmin he creado una tabla vacía con dos columnas. No importa el tipo de las columnas. Sobre esa tabla he realizado una consulta \ref{fig:figura19}
+desde la consola mysql que nos facilita phpMyAdmin. Si marcamos la opción de perfilar, podremos hacer un \textit{profile} de la consulta.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.45]{Figura19.png}  
+\caption{Consulta sobre una tabla.}\label{fig:figura19}
+\end{figure}
+
+Una vez hecha la consulta, podemos ver una detallada tabla en la que se separa el tiempo consumido en cada tarea, el porcentaje el mismo y el orden de ejecución de 
+las distintas tareas. PhpMyAdmin nos da dos interfaces para verlo, una tabla como la que puede verse en la Figura \ref{fig:figura17} o un diagrama  circular como en la 
+Figura \ref{fig:figura18}. En ambos se ve claramente que la tarea que más tiempo ha consumido es la de realizar el profile y plasmar los datos en las gráficas. Esto se 
+debe a que la tabla creada está vacía y por lo tanto la consulta es muy rápida. En consultas más  complejas y con tablas de mayor peso, el acceso a memoria debería
+ser la tarea más costosa.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.45]{Figura17.png}  
+\caption{Tabla del \textit{profile}.}\label{fig:figura17}
+\end{figure}
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.45]{Figura18.png}  
+\caption{Diagrama circular del \textit{profile}.}\label{fig:figura18}
+\end{figure}
+
+%------------------------------------------------
+
+\section{(Cuestión opcional 2) ¿Qué archivo ha de modificar para programar una tarea? Escriba la línea necesaria para ejecutar una vez al día una copia del directorio ~/codigo a ~/seguridad/\$fecha donde \$fecha es la fecha actual.}
+
+A pesar de que no se recomienda hacerlo en el manual\cite{crontab} el archivo a modificar para programar una tarea estaría situado en \url{/var/spool/cron/crontabs}.
+No obstante la documentación recomienda usar el comando crontab, diseñado especificamente para programar tareas llevadas a cabo por el \textit{deamon} cron.
+
+Un ejemplo de su uso sería añadir la línea que aparece en la Figura \ref{fig:figura21} al archivo de crontab. Esto nos ejecutaría el script sscodigo cada
+día a las 2 de la madrugada, normalmente las copias de seguridad se hacen en horas de bajo uso. El script puede contener cualquier tipo de trabajo pero para este 
+ejercicio podría ser el que aparece en la Figura \ref{fig:figura20}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.45]{Figura20.png}  
+\caption{Linea del archivo crontab.}\label{fig:figura20}
+\end{figure}
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.45]{Figura21.png}  
+\caption{Script ejecutado por el cron.}\label{fig:figura21}
+\end{figure}
+
+
+\newpage
+
+\bibliography{citando} %archivo citas.bib que contiene las entradas 
+\bibliographystyle{plain} % hay varias formas de citar
+
+\end{document}

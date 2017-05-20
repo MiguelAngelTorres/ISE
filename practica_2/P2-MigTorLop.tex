@@ -1,0 +1,701 @@
+\input{preambuloSimple.tex}
+
+%----------------------------------------------------------------------------------------
+%	TÍTULO Y DATOS DEL ALUMNO
+%----------------------------------------------------------------------------------------
+
+\title{	
+\normalfont \normalsize 
+\textsc{\textbf{Ingeniería de Servidores (2016-2017)} \\ Doble grado en Ingeniería Informática y Matemáticas \\ Universidad de Granada} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{2pt} \\[0.4cm] % Thin top horizontal rule
+\huge Memoria Práctica 2 \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Miguel Ángel Torres López} % Nombre y apellidos
+
+\date{\normalsize\today} % Incluye la fecha actual
+
+%----------------------------------------------------------------------------------------
+% DOCUMENTO
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Muestra el Título
+
+\newpage %inserta un salto de página
+
+\tableofcontents % para generar el índice de contenidos
+
+\newpage
+
+\listoffigures
+
+\listoftables
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 1
+%----------------------------------------------------------------------------------------
+
+\section{Yum.}
+\subsection{Liste los argumentos de yum necesarios para instalar, buscar y eliminar paquetes.}
+
+Como se menciona en el manual en linea\cite{manyum} los argumenos necesarios para las tareas básicas son:
+\begin{itemize}
+	\item \textbf{Instalar} - install package
+	\item \textbf{Buscar} - search string
+	\item \textbf{Eliminar} - remove | erase package
+\end{itemize} 
+
+\vspace{6mm}
+
+\subsection{¿Qué ha de hacer para que yum pueda tener acceso a Internet en el PC del aula?}
+
+El problema del PC del aula es la situación dentro de un proxy. Para indicar a yum como pasarlo\cite{proxyyum} hay que especificarlo en el
+archivo de configuración /etc/yum.conf con usuario con privilegios. Como estamos en CentOS, usaremos vi para añadir la siguiente
+linea al archivo mencionado:
+
+\textit{proxy = http://stargate.ugr.es:3128}
+
+\vspace{6mm}
+
+\subsection{¿Cómo añadimos un nuevo repositorio?}
+
+En la documentación de RedHat\cite{redyum} se especifica como incorporar nuevos repositorios a yum. El comando \textbf{yum-config-manager} es muy
+útil a la hora de administrar la configuración de yum. Añadiendo la terminacion \textbf{--add-repo dir-url} añadimos el repositorio dir-url.
+Como una medida de seguridad, \textbf{yum-config-manager --(enable or disable) repositorio} permite o no permite descargar del repositorio. Para poder utilizar yum-config-manager es necesario instalar el paquete yum-utils.
+
+En la Figura \ref{fig:figura12} se muestra como añadir el repositorio para descargar Skype. Cabe destacar que todas las acciones anteriores tienen que ser ejecutadas
+en modo administrador.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura12.png}  
+\caption{Incluir un repositorio en yum. Realizada el 16 de Abril de 2017.} \label{fig:figura12}
+\end{figure}
+%------------------------------------------------
+
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 2
+%----------------------------------------------------------------------------------------
+
+\section{Apt.}
+
+%------------------------------------------------
+
+\subsection{Liste los argumentos de pat necesarios para instalar, buscar y eliminar paquetes.}
+
+Como se menciona en el manual en linea\cite{manapt} los argumenos necesarios para las tareas básicas son:
+\begin{itemize}
+	\item \textbf{Instalar} - apt-get install package
+	\item \textbf{Buscar} - apt	-cache search string
+	\item \textbf{Eliminar} - apt-get remove package
+\end{itemize}
+
+\vspace{6mm}
+
+\subsection{¿Qué ha de hacer para que apt pueda tener acceso a Internet en el PC del aula?}
+
+Según la documentación en \cite{proxyapt}, basta con añadir una linea al archivo /etc/apt/apt.conf para especificar que nos encontramos un proxy.
+Con la orden \textit{Acquire::http::Proxy "http://stargate.ugr.es:3128";} podremos pasar el proxy con apt.
+\vspace{6mm}
+
+\subsection{¿Cómo añadimos un nuevo repositorio?}
+
+En el manual\cite{repoapt} se menciona que se puede cambiar el archivo /etc/apt/source.list para añadir repositorios. Sin embargo,
+se recomienda desde la versión 9.10 usar el comando add-apt-repository ppa:[url] para introducir nuevos repositorios.
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 3
+%----------------------------------------------------------------------------------------
+
+\section{Puertos y Firewalls.}
+
+
+\subsection{¿Con qué comando puede abrir/cerrar un puerto usando ufw? Muestre un ejemplo de cómo lo ha hecho.}
+
+Con el comando ufw, que puede consultarse en el manual\cite{manufw}, se pueden establecer reglas para el firewall. Dos de las reglas que se pueden construir son
+\textit{ufw allow [puerto]} y \textit{ufw deny [puerto]}. Estas dos reglas permiten respectivamente abrir y cerrar un puerto en la máquina. Para hacer efectivo el firewall y
+así activar las reglas es necesario ejecutar el comando \textit{ufw enable}. El resultado de estos comandos puede verse en la Figura \ref{fig:figura13}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura13.png}  
+\caption{Abrir y cerrar puertos con ufw. Realizada el 17 de Abril de 2017.} \label{fig:figura13}
+\end{figure}
+
+\vspace{6mm}
+
+\subsection{¿Con qué comando puede abrir/cerrar un puerto usando firewall-cmd en CentOS? Muestre un ejemplo de cómo lo ha hecho.}
+
+Para abrir y cerrar un puerto con firewall-cmd en centos basta con agregar dos argumentos a este comando. De forma similar al apartado anterior, --add-port=[port]/[protocol] 
+añade una regla y --remove-port=[port]/[protocol] la quita. Pueden consultarse este y otros argumentos en la documentación oficial de RedHat\cite{redports}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura14.png}  
+\caption{Abrir y cerrar puertos con firewall-cmd. Realizada el 17 de Abril de 2017.} \label{fig:figura14}
+\end{figure}
+
+\vspace{6mm}
+
+\subsection{Utilice el comando nmap para ver que, efectivamente, los puertos estan accesibles.}
+
+Otra forma de consultar el estado de los puertos es con el comando nmap. Puede verse un ejemplo en la Figura \ref{fig:figura15}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura15.png}  
+\caption{Comprobar el estado de los puertos con nmap. Realizada el 17 de Abril de 2017.} \label{fig:figura15}
+\end{figure}
+
+%------------------------------------------------
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 4 -
+%----------------------------------------------------------------------------------------
+
+\section{¿Qué diferencia hay entre telnet y ssh?}
+
+Como se describe en \cite{telnetvsssh} telnet usa el puerto 23 mientras que ssh usa el puerto 22 por defecto. No obstante, ambos son protocolos de red usados
+para acceder remotamente a dispositivos y manejarlos o administrarlos. La gran diferencia la encontramos en el modo de comunicación. Los mensajes en telnet 
+se escriben en texto plano, lo que hace vulnerable la línea de información transportada. Ssh, considerado el sucesor de telnet, permite el cifrado de la información 
+por medio de claves públicas y privadas, lo cual hace más seguro la comunicación con el dispositivo remoto. 
+
+%------------------------------------------------
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 5
+%----------------------------------------------------------------------------------------
+
+\section{¿Para qué sirve la opción -X? Ejecute remotamente, es decir, desde la máquina anfitriona (si tiene Linux) o desde la otra máquina virtual, el comando gedit en una sesión abierta con ssh. ¿Qué ocurre?}
+
+Consultando el manual en linea\cite{manssh} podemos ver que ocurre cuando activamos la opción -X de ssh.
+Esta opción activa el X11 forwarding y, como explica detalladamente la universidad de Pennsylvania en su web\cite{penn}, esta característica activa la posiblidad de 
+administrar remotamente una máquina a partir de una interfaz gráfica sin que necesariamente la máquina remota tenga interfaz gráfica.
+
+\vspace{6mm}
+
+He dispuesto en la máquina virtual de Ubuntu Server un servidor de ssh instalando openssh-server. Se puede configurar desde el archivo /etc/ssh/sshd-config, no obstante,
+por ahora no cambiaremos nada de la configuración por defecto. Cambiamos la red de la máquina virtual a Host-only para poder acceder al servidor desde el anfitrión.
+El puerto 22, el que usa por defecto ssh, ha sido abierto con el comando ufw. Tanto la configuración del puerto como la ip de la máquina pueden verse en 
+la Figura \ref{fig:figura7}. 
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura7.png}  
+\caption{Configuración de la máquina servidor. Realizada el 16 de Abril de 2017.} \label{fig:figura7}
+\end{figure}
+
+En caso de tener una máquina anfitriona de Linux, basta con tener instalado el comando ssh y realizar la conexión con ssh nombredeusuario@ipdelamáquina.
+En mi caso, la máquina anfitriona tiene instalado Windows 10, luego para poder conectarme con ssh necesitaré el software PuTTY\cite{putty}. Ahora podremos
+conectarnos fácilmente introduciendo la ip de la máquina en el programa descargado. 
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura44.png}  
+\caption{Conexión realizada. Realizada el 16 de Abril de 2017.} \label{fig:figura44}
+\end{figure}
+
+Nos conectamos con usuario y contraseña como puede verse en la Figura \ref{fig:figura6}
+y ejecutamos el comando gedit. Como Ubuntu Server no tiene instalado gedit nos aparecer el error que sugiere su instalación. No obstante, de ser el anfitrión
+un sistema operativo basado en linux, se podría activar el X11 forwarding para ejecutar gedit sin tener que instalarlo en la máquina base.
+
+He investigado si es posible lanzar gedit en Windows con X11 forwarding. En distintas páginas se sugiere la idea de instalar Xming pero no he sido capaz de 
+hacer que PuTTY y Xming trabajen juntos.
+
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura6.png}  
+\caption{Conexión realizada. Realizada el 16 de Abril de 2017.} \label{fig:figura6}
+\end{figure}
+%------------------------------------------------
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 6
+%----------------------------------------------------------------------------------------
+
+\section{Muestre la secuencia de comandos y las modificaciones a los archivos correspondientes para permitir acceder a la consola remota sin introducir la contraseña. Pruebe que funciona.}
+
+En una máquina con sistema operativo basado en Linux, se puede instalar el paquete ssh para llevar a cabo este cometido.
+Podemos establecer un login con clave pública/privada \cite{sshkey}, en la máquina que se va a conectar generamos un par de llaves con el 
+comando ssh-keygen -b 1024 -t dsa. 1024 hace referencia al tamaño de la clave, cuanto más larga más seguridad habrá.
+A continuación mandamos la clave a la máquina que actúa como host con el comando ssh-copy.
+
+\vspace{6mm}
+
+En mi caso, voy a conectarme usando Windows a un servidor de Linux, luego usaré el software PuTTY\cite{putty} para establecer la conexión sin contraseña.
+En primer lugar generamos un par de llaves como se observa en la Figura \ref{fig:figura16} y guardamos el archivo generado en algún lugar seguro.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura16.png}  
+\caption{Generado de llaves. Realizada el 17 de Abril de 2017.} \label{fig:figura16}
+\end{figure}
+
+En el archivo generado aparecerá la clave pública, el siguiente paso es copiar esa clave en el archivo \url{/home/user/.ssh/authorized_keys} con la etiqueta ssh-rsa delante tal y como se muestra en la Figura \ref{fig:figura17}.
+Cambiamos los permisos del archivo para mayor seguridad.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura17.png}  
+\caption{Guardo la clave en el host. Realizada el 17 de Abril de 2017.} \label{fig:figura17}
+\end{figure}
+%------------------------------------------------
+
+Ahora indicamos a PuTTY donde está situado el archivo con las claves como se muestra en la Figura \ref{fig:figura18} y añadimos el nombre de usuario permanente.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura18.png}  
+\caption{Localización del archivo de claves. Realizada el 17 de Abril de 2017.} \label{fig:figura18}
+\end{figure}
+
+Al conectarnos podemos ver que no se nos pide usuario y contraseña, sino que se hace uso de las llaves públicas y privadas.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura19.png}  
+\caption{Conexión sin contraseña. Realizada el 17 de Abril de 2017.} \label{fig:figura19}
+\end{figure}
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 7
+%----------------------------------------------------------------------------------------
+
+\section{¿Qué archivo es el que contiene la configuración del servicio ssh?}
+
+Podemos ver en \cite{sshconfig} que el archivo \url{ssh_config} es leido por ssh para establecer la configuración del programa.
+Por otra parte, en \cite{sshdconfig}, se nos indica que en el archivo \url{sshd_config} está la configuración del demonio de ssh.
+
+\vspace{6mm}
+
+\subsection{¿Qué parámetro hay que modificar para evitar que el usuario root acceda? Cambie el puerto por defecto y compruebe que puede acceder.}
+
+El parámetro PerminRootLogin modifica el servicio para que el usuario root no pueda acceder, por otro lado, el parámetro Port indica el puerto en el que ssh está escuchando.
+Cambiemos entonces el archivo como aparece en la Figura \ref{fig:figura20}
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura20.png}  
+\caption{Configuración de sshd-config. Realizada el 17 de Abril de 2017.} \label{fig:figura20}
+\end{figure}
+
+Para termina de establecer correctamente el puerto 2552 como nuevo puerto de ssh falta abrir los puertos con el comando ufw. Esto permitirá la entrada de remota
+al servicio. Cambiamos en PuTTY el puerto de envio de la petición a 2552 como se muestra en la Figura \ref{fig:figura21} y conectamos normalmente.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura21.png}  
+\caption{Configuración de PuTTY para nuevo puerto. Realizada el 17 de Abril de 2017.} \label{fig:figura21}
+\end{figure}
+
+%------------------------------------------------
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 8
+%----------------------------------------------------------------------------------------
+
+\section{Indique si es necesario reiniciar el servicio.}
+
+Ssh lee la información y la configuración almacenada en sus archivos cada vez que se ejecuta y se abre el servicio. Por lo tanto, si el servicio está en ejecución y
+se alteran algunos componentes de sus archivos de configuración, estos no será efectivos hasta la siguiente ejecución. Además, algunos parametros de dichos archivos
+son críticos, es decir, su alteración efectiva conllevaría apagar el servicio ssh e iniciarlo con la nueva característica.
+
+\subsection{¿Cómo se reinicia un servicio en Ubuntu?}
+
+Se recomienda usar systemctl\cite{systemctl} para administrar los servicios. Por ejemplo, para reiniciar el servicio ssh habría que proceder como se muestra en la 
+Figura \ref{fig:figura22}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura22.png}  
+\caption{Reiniciar servicio en Ubuntu. Realizada el 17 de Abril de 2017.} \label{fig:figura22}
+\end{figure}
+
+\subsection{¿Cómo se reinicia un servicio en CentOS?}
+
+De la misma forma que en Ubuntu, se puede usar el comando systemctl\cite{centosservice} para administrar los servicios. El resultado, similar al de Ubuntu puede verse en la Figura \ref{fig:figura31}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura31.png}  
+\caption{Reiniciar servicio en CentOS. Realizada el 17 de Abril de 2017.} \label{fig:figura31}
+\end{figure}
+
+
+
+%------------------------------------------------
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 9
+%----------------------------------------------------------------------------------------
+
+\section{Muestre los comandos que ha utilizado en Ubuntu Server para realizar la instalación de LAMP.}
+
+En Ubuntu es posible instalar los servicios por separado, es decir, instalar Apache2, MySQL y PHP de uno en uno con apt e ir configurándolos. No obstante, existe
+una manera más facil, el comando tasksel\cite{tasksel}. Este comando abre una ventana gráfica para instalar algunas aplicaciones, entre esas aplicaciones esta LAMP.
+Se puede ver el proceso en las Figuras \ref{fig:figura23}, \ref{fig:figura24} y \ref{fig:figura25}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura23.png}  
+\caption{Selección de aplicaciones a instalar. Realizada el 17 de Abril de 2017.} \label{fig:figura23}
+\end{figure}
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura24.png}  
+\caption{Instalación de LAMP Realizada el 17 de Abril de 2017.} \label{fig:figura24}
+\end{figure}
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura25.png}  
+\caption{Selección de contraseña de administrado para MySQL. Realizada el 17 de Abril de 2017.} \label{fig:figura25}
+\end{figure}
+
+En la Figura \ref{fig:figura26} se muestra el servidor web funcionando desde la máquina anfitriona.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura26.png}  
+\caption{Servidor web funcionando. Realizada el 17 de Abril de 2017.} \label{fig:figura26}
+\end{figure}
+
+Para comprobar que PHP está bien instalado, hacemos un archivo de prueba en /var/www/html/info.php. Comprobamos que en el buscador se efectúa el comando
+php.info() al conectarse desde el anfitrión como se muestra en la Figura \ref{fig:figura27}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura27.png}  
+\caption{Comprobación de PHP en Ubuntu. Realizada el 17 de Abril de 2017.} \label{fig:figura27}
+\end{figure}
+
+\subsection{Muestre las capturas de pantalla de CentOS correspondientes a la instalación de LAMP.}
+
+Para instalar LAMP en CentOS instalaremos cada componente por separado\cite{lampcentos} con yum. Primero instalaremos apache con \textbf{sudo yum install httpd} y lo iniciaremos\ref{fig:figura28}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura28.png}  
+\caption{Instalación de apache en CentOS. Realizada el 17 de Abril de 2017.} \label{fig:figura28}
+\end{figure}
+
+A continuación instalamos la base de datos, en este caso instalaremos MariaDB con el comando \textbf{sudo yum install mariadb-server mariadb} para luego instalar
+mysql con el comando \textbf{sudo mysql-secure-installation}. Tras este último comando se efectúa la instalación de mysql y se pedirá que se especifique varias configuraciones, se muestran algunas en la Figura \ref{fig:figura29}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura29.png}  
+\caption{Instalación de mysql en CentOS. Realizada el 17 de Abril de 2017.} \label{fig:figura29}
+\end{figure}
+
+Instalamos ahora PHP, de forma similar a los anteriores, con el comando \textbf{sudo yum install php php-mysql} Para probar que php ha sido instalado satisfactoriamente
+tenemos el proceso anterior. Creamos un archivo básico de php y lo introducimos en \url{/var/www/html/info.php} y vemos con curl el código de la página. El 
+resultado puede verse en \ref{fig:figura30}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura30.png}  
+\caption{Comprobación del funcionamiento de PHP. Realizada el 17 de Abril de 2017.} \label{fig:figura30}
+\end{figure}
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 10
+%----------------------------------------------------------------------------------------
+
+\section{Realice la instalación de IIS y el resto de complementos usando GUI y compruebe que el servicio está funcionando accediendo a la MV a través de la anfitriona.}
+
+Tras instalar el servidor IIS en Windows Server\footnote{No lo muestro con capturas de pantalla porque el proceso está detallado en la práctica y no tiene cambios interesantes} 
+y comprobar desde local que el servidor esta activo\footnote{Accediendo en un buscador a la direcion https://localhost},
+pasamos a comprobar que está accesible desde otras máquinas. Para ello, desde VirtualBox cambiamos la configuración de red de la máquina y la preparamos para
+establecer una conexión de puente o Bridge. Ahora, al iniciar la máquina virtual, la dirección en mi caso es 192.168.56.101 desde la máquina anfitriona. Podemos 
+ver en la Figura \ref{fig:figura4} como IIS es accesible desde ambas máquinas.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura4.png}  
+\caption{Comprobación del servidor IIS desde anfitrión. Realizada el 15 de Abril de 2017.} \label{fig:figura4}
+\end{figure}
+
+%------------------------------------------------
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 11
+%----------------------------------------------------------------------------------------
+
+\section{Muestre un ejemplo de uso del comando patch.}
+
+Para mostrar un ejemplo del comando patch, he usado la referencia que se aporta en las prácticas\footnote{\url{http://fedoraproject.org/wiki/VMWare}}. 
+El script que aparece en la referencia para dar la posibilidad de usar Fedora 20 en una máquina virtual de VMWare contiene el comando patch.
+El comando en esta ocasión es usado con los argumentos -i y -p0, para indicar el lugar donde se encuentra la información del parche. Para
+más información se puede buscar en el manual en linea con el comando man patch\cite{manpatch}.
+Observamos en la Figura \ref{fig:figura5} como el script se ejecuta y comienza a descargarse el parche necesario(comando curl).
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura5.png}  
+\caption{Ejemplo de uso del comando patch. Realizada el 15 de Abril de 2017.} \label{fig:figura5}
+\end{figure}
+
+
+
+
+%------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 12
+%----------------------------------------------------------------------------------------
+
+\section{Realice la instalación de esta aplicación y pruebe a modificar algún parametro de algún servicio. Muestre las capturas de pantalla en ambos procesos.}
+
+Primero descargamos el paquete de instalación que hay en la página web desde la máquina anfitriona. Para poder pasar los archivos hasta la máquina virtualizada, 
+usaremos sftp desde la terminal, en mi caso desde PowerShell. Con el comando psftp open miguelangeltorres@192.168.56.101 abro la conexión con la máquina  virtual,
+luego, con el comand put archivo, transfiero el paquete hasta esta como se ve en la Figura \ref{fig:figura8}
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.6]{Figura8.png}  
+\caption{Subir paquete al servidor. Realizada el 16 de Abril de 2017.} \label{fig:figura8}
+\end{figure}
+
+Ahora desde la máquina virtual instalamos el paquete con el comando dpkg\cite{dpkg}. Es posible que salgan algunas dependencias no instaladas.
+Se resuelve instalando las dependencias primero y luego intentando instalar de nuevo el paquete como se muestra en la Figura \ref{fig:figura9}
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura9.png}  
+\caption{Instalar el paquete. Realizada el 16 de Abril de 2017.} \label{fig:figura9}
+\end{figure}
+
+Una vez instalado, se puede iniciar la interfaz web desde el enlace que especifica por defecto. Se abrirá una página pidiendo usuario y contraseña del administrador y,
+a continuación aparecerá la página de webmin como en la Figura \ref{fig:figura10}. Probaremos a alterar los usuarios y los grupos. Para probar, crearemos un usuario 
+llamado usuario y un grupo llamado NuevoGrupo al que añadiremos a varios usuarios. El resultado puede verse en la Figura \ref{fig:figura11}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura10.png}  
+\caption{Página inicial de Webmin. Realizada el 16 de Abril de 2017.} \label{fig:figura10}
+\end{figure}
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura11.png}  
+\caption{Nuevo grupo creado en Webmin. Realizada el 16 de Abril de 2017.} \label{fig:figura11}
+\end{figure}
+%------------------------------------------------
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 13
+%----------------------------------------------------------------------------------------
+
+\section{Instale phpMyAdmin, inidique cómo lo ha realizado y muestre algunas capturas de pantalla.}
+
+Desde el gesto de paquetes apt se puede descargar phpmyadmin. El comando \textit{sudo apt-get install phpmyadmin} nos conduce a una GUI para descargar y
+configurar phpMyAdmin. La instalación viene detallada en la Figura \ref{fig:figura32}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura32.png}  
+\caption{Instalación de phpMyAdmin. Realizada el 16 de Abril de 2017.} \label{fig:figura32}
+\end{figure}
+
+Ya tenemos instalado phpMyAdmin. Ahora podemos acceder con el anfitrión en la url \url{http//192.168.56.101/phpmyadmin} y conectarnos con usuario root y contraseña del root de la máquina. Aparece la página inicial de phpMyAdmin como en la Figura \ref{fig:figura33}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura33.png}  
+\caption{Instalación de phpMyAdmin. Realizada el 16 de Abril de 2017.} \label{fig:figura33}
+\end{figure}
+
+\vspace{6mm}
+
+\subsection{Configure PHP para poder importar BDs de hasta 25MiB. Indique y muestre como ha hecho el proceso.}
+
+Como se documenta en \cite{postmax},se puede cambiar fácilmente el tamaño máximo de subida de archivos desde el archivo de configuración php.ini situado en el directorio donde se guarda php. La
+variable \url{post_max_size} es el tamaño máximo que se permite a un archivo cuando se sube y tiene el valor por defecto 8MB. Se cambia a 25MB con privilegios de 
+superusuario y se reinicia el servidor apache2. Ahora la variable ya ha hecho efecto y podemos importar bases de datos de hasta 25MB. El archivo alterado puede
+verse en la Figura \ref{fig:figura37}
+
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura37.png}  
+\caption{Modificación del tamaño máximo de subida. Realizada el 16 de Abril de 2017.} \label{fig:figura37}
+\end{figure}
+
+%------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 14
+%----------------------------------------------------------------------------------------
+
+\section{Visite al menos una de las webs de los software mencionados y pruebe las demos que ofrecen realizando capturas de pantalla y comentando qué está realizando.}
+
+Vistaremos la web de DirectAdmin\footnote{https://directadmin.com/demo.html} y probaremos la Admins demo. Cuando accedemos a la demo, se nos dice la
+contraseña y el usuario para poner en el login, al introducirlos, ya podemos ver la página inicial del software\ref{fig:figura34}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura34.png}  
+\caption{Página inicial de DirectAdmin. Realizada el 18 de Abril de 2017.} \label{fig:figura34}
+\end{figure}
+
+Vamos a realizar algunas pruebas para ver cómo funciona. Por ejemplo, primero cambiemos la contraseña de la cuenta administrador. Para ello nos vamos al
+apartado de contraseñas e introducimos la antigua y la nueva contraseña como podemos ver en la Figura \ref{fig:figura35}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura35.png}  
+\caption{Cambio de contraseña en DirectAdmin. Realizada el 18 de Abril de 2017.} \label{fig:figura35}
+\end{figure}
+
+Ahora queremos ver el directorio donde se guardan los archivos del servidor y, por ejemplo, añadir un archivo a este directorio. Accedemos a la pestaña de \textbf{files}.
+Vemos ahora el directorio y, en la parte inferior, podemos añadir un archivo. Le damos un nombre y marcamos la casila para que el archivo se rellene con una plantilla
+html. Podemos ver en la Figura \ref{fig:figura36} el proceso. Al escribir el archivo y guardarlo, se almacenará en el directorio principal.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura36.png}  
+\caption{Creación de archivos en DirectAdmin. Realizada el 18 de Abril de 2017.} \label{fig:figura36}
+\end{figure}
+
+%------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 15
+%----------------------------------------------------------------------------------------
+
+\section{Automatización de tareas.}
+
+\subsection{Ejecute los ejemplos de find, grep.}
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura38.png}  
+\caption{Ejecución de los comandos de ejemplo find y grep. Realizada el 18 de Abril de 2017.} \label{fig:figura38}
+\end{figure}
+
+\vspace{6mm}
+
+\subsection{Escriba el script que haga uso de sed para cambiar la configuración de ssh y reiniciar el servicio.}
+
+He escrito un script que cambia la variable PermitEmptyPasswords del archivo \url{/etc/ssh/sshd_config} a si, es decir, configura ssh para que se puedan usar 
+contraseñas vacías. El script se puede ver en la Figura \ref{fig:figura40}. Para mostrar un ejemplo de su uso vea la Figura \ref{fig:figura39}.
+ 
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura40.png}  
+\caption{Script realizado. Realizada el 18 de Abril de 2017.} \label{fig:figura40}
+\end{figure}
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura39.png}  
+\caption{Ejemplo de funcionamiento del script. Realizada el 18 de Abril de 2017.} \label{fig:figura39}
+\end{figure}
+\vspace{6mm}
+
+\subsection{Muestre un ejemplo de uso para awk.}
+
+Aunque ya hemos usado awk en el apartado anterior, mostraremos otro ejemplo de uso. Sabemos que el archivo \url{/etc/ssh/sshd_config} contiene una variable 
+llamada X11Forwarding, pero no sabemos su valor. En lugar de buscar en el archivo su valor ejecutamos el comando como en la Figura \ref{fig:figura41}
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura41.png}  
+\caption{Ejemplo del comando awk. Realizada el 18 de Abril de 2017.} \label{fig:figura41}
+\end{figure}
+
+%------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 16
+%----------------------------------------------------------------------------------------
+
+\section{Escriba el script para cambiar el acceso a ssh usando PHP o Python.}
+
+En las Figuras \ref{fig:figura42} y \ref{fig:figura43} podemos ver el script apoyado en el ejercicio anterior y la ejecución del mismo. 
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura42.png}  
+\caption{Script en Python. Realizada el 18 de Abril de 2017.} \label{fig:figura42}
+\end{figure}
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura43.png}  
+\caption{Ejecución del script. Realizada el 18 de Abril de 2017.} \label{fig:figura43}
+\end{figure}
+
+
+%------------------------------------------------
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 17
+%----------------------------------------------------------------------------------------
+
+\section{Abra una consola de Powershell y pruebe a parar un programa en ejecución, realice capturas de pantalla y comente lo que muestra.}
+
+He realizado la parada de algunos programas en distintas situaciones. En primer lugar, con la cuenta de administrador, he abierto el buscador y, también desde la 
+cuenta de administrador he ejecutado un comando para parar el proceso lanzado, Como se puede ver en la Figura \ref{fig:figura1}, el comando ha sido ejecutado con 
+éxito, no ha dado ningún mensaje adicional pero observamos que la ventana vinculada al programa se ha cerrado. 
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura1.png}  
+\caption{Parada de un proceso en ejecución desde administrador. Realizada el 15 de Abril de 2017.} \label{fig:figura1}
+\end{figure}
+
+En segundo lugar, he abierto el mismo programa desde la cuenta de administrador. A continuación, he cambiado de usuario y he abierto una cuenta de usuario sin
+privilegios. Al intentar cerrar el programa ejecutado desde la cuenta de administrador no salta un error, no se tienen los permisos necesarios para parar el programa.
+Puede observarse el resultado en la Figura \ref{fig:figura2}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura2.png}  
+\caption{Parada de un proceso de administrador en ejecución desde cuenta sin privilegios. Realizada el 15 de Abril de 2017.} \label{fig:figura2}
+\end{figure}
+
+Por último, he abierto un programa con cuenta de usuario sin privilegios. He intentado pararlo con la propia cuenta de usuario y, como se puede observar en la Figura
+\ref{fig:figure3}, el comando ha dado resultados y el programa se ha cerrado.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura3.png}  
+\caption{Parada de un proceso de usuario con cuenta de usuario. Realizada el 15 de Abril de 2017.} \label{fig:figura3}
+\end{figure}
+%------------------------------------------------
+
+\newpage
+
+\bibliography{citando} %archivo citas.bib que contiene las entradas 
+\bibliographystyle{plain} % hay varias formas de citar
+
+\end{document}

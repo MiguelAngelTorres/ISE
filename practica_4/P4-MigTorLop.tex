@@ -1,0 +1,296 @@
+\input{preambuloSimple.tex}
+\usepackage{listings}
+
+
+%----------------------------------------------------------------------------------------
+%	TÍTULO Y DATOS DEL ALUMNO
+%----------------------------------------------------------------------------------------
+
+\title{	
+\normalfont \normalsize 
+\textsc{\textbf{Ingeniería de Servidores (2016-2017)} \\ Doble grado en Ingeniería Informática y Matemáticas \\ Universidad de Granada} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{2pt} \\[0.4cm] % Thin top horizontal rule
+\huge Memoria Práctica 4 \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Miguel Ángel Torres López} % Nombre y apellidos
+
+\date{\normalsize\today} % Incluye la fecha actual
+
+%----------------------------------------------------------------------------------------
+% DOCUMENTO
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Muestra el Título
+
+\newpage %inserta un salto de página
+
+\tableofcontents % para generar el índice de contenidos
+
+\newpage
+
+\listoffigures
+
+\listoftables
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 1
+%----------------------------------------------------------------------------------------
+
+\section{Seleccione, instale y ejecute un benchmark, comente los resultados.}
+
+Para instalar Phoronix-test-suite se puede usar el gestor de paquetes apt, basta con ejecutar el comando sudo apt install phoronix-test-suite.
+Una vez tengamos instalado el programa, se nos mostrará una mensaje de bienvenida con la versión del programa como en la 
+Figura \ref{fig:figura1}. No obstante, no tenemos ningún benchmark descargado, luego para probarlo necesitaremos descargar alguno.
+Con el comando \textit{phoronix-test-suite list-available-tests} se mostrarán en la terminal los tests disponibles para descargar. En mi
+caso he elegido un test de GIMP, un editor de imagenes de código abierto. Al intentar hacer el test con el comando 
+\textit{phoronix-suite-test benchmark system/gimp} empezará la descarga como se muestra en la Figura \ref{fig:figura3}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura1.png}  
+\caption{Descarga de phoronix-test-suite.}\label{fig:figura1}
+\end{figure}
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura3.png}  
+\caption{Instalación del test de GIMP}\label{fig:figura3}
+\end{figure}
+
+\vspace{5mm}
+
+Ahora al ejecutar el test nos preguntará que configuración queremos para el test. En mi caso he elegido la configuración 1. Tras varios
+minutos de ejecución, nos salen los datos del test realizado. Como se puede observar en la Figura \ref{fig:figura4} mi test tiene una
+salida de 19.10s. Ahora bien, no sabemos cuál es una puntuación buena ni cual es mala. Para comparar con otros máquinas podemos ir
+a la página de OpenBenchmarking\cite{gimpbm} y comparar el resultado. La tabla sacada de la página puede consultarse en la 
+Figura \ref{fig:figura5} y, a la vista de los resultados, la puntuación obtenida por mi máquina es media-baja. Es importante que a la hora
+de realizar benchmark la máquina no esté estresada, es decir, no puede estar trabajando con otros procesos pesados pues los datos se
+falsearían.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura4.png}  
+\caption{Ejecución del test.}\label{fig:figura4}
+\end{figure}
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura3.png}  
+\caption{Tabla de resultados del benchmark de GIMP.}\label{fig:figura5}
+\end{figure}
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 2
+%----------------------------------------------------------------------------------------
+
+\section{De los parámetros que le podemos pasar al comando ab ¿Qué significa -c 5? ¿Y -n 100? Monitorice la ejecución de ab contra alguna máquina ¿Cuantas tareas crea ab en el cliente?}
+
+El \textit{benchmark} ab está especializado en comprobar cuantas peticiones es capaz de servir un servidor Apache.Como se especifica en el manual 
+online\cite{manab}, el parámetro -c 5 establece la concurrencia del benchmark a 5, es decir, se realizarán 5 peticiones al servidor Apache por cada iteración
+programada. Por otro lado, el parámetro -n 100 altera el número de peticiones y lo pone a 100. Esto quiere decir que se llevarán a cabo 100 peticiones
+en la sesión de \textit{benchmark}. Estos dos parámetros son los básicos para administrar la prueba realizada contra Apache. Por ejemplo, en el caso expuesto, se
+realizarían paquetes de 5 peticiones  hasta que las peticiones totales lleguen a 100. Por lo tanto se estarían realizando 20 iteraciones. Es interesante también usar el 
+comando -k para mantener las conexiones realizadas vivas, de lo contrario la conexión se cerrará inmediatamente después de realizarse. Algo que no sucede de forma
+habitual.
+
+\vspace{5mm}
+
+En la Figura \ref{fig:figura2} podemos observar la salida producia al realizar un \textit{benchmark} con ab y los parámetros especificados anteriormente.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura2.png}  
+\caption{Benchmark ab contra Apache en un servidor LAMP.}\label{fig:figura2}
+\end{figure}
+
+En principio podríamos pensar que \textit{ab} está usando 5 tareas ya que le hemos puesto que mande 5 peticiones concurrentemente. Podemos comprobar con el 
+comando \textit{ps} \cite{manps} el número de tareas que tiene creadas \textit{ab} en un momento concreto. En la Figura \ref{fig:figura16} vemos que el sistema solo tiene una tarea asociada a \textit{ab}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura16.png}  
+\caption{Número de tareas de ab comprobado con ps.}\label{fig:figura16}
+\end{figure}
+
+%------------------------------------------------
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 3
+%----------------------------------------------------------------------------------------
+
+\section{Ejecute ab contra las tres máquinas virtuales una a una. ¿Cuál es la que proporciona mejores resultados? Muestre y coméntelos.}
+
+Para hacer una comparación equitativa entre las tres máquinas es necesario cambiar el contenido de la página pues el contenidopor defecto de cada una de las 
+versiones es diferente. En Windows Server el archivo iisstart está en el directorio \textit{intepub/wwroot}, en CentOS y Ubuntu Server se encuentra en el directorio
+\textit{/var/www/html}. Para hacer esta prueba, escribiremos una página inicial simple como la que aparece en la Figura \ref{fig:figura6}. Es importante que el contenido
+sea exactamente el mismo, pues \textit{ab} descargará el contenido de la web en cada petición.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura6.png}  
+\caption{Contenido de la página web.}\label{fig:figura6}
+\end{figure}
+
+Lo primero que vemos en esta comparación es que la dimensión del documento es la misma 69 bytes y la cantidad espacio ocupado por el envio del html es la 
+misma, sin embargo, cada servidor transfiere una cantidad distinta de datos. Esto puede deberse a la forma en que cada sistema operativo trata el envío de 
+información a través del protocolo tcp (datos redundantes, encriptación, información del envio, etc). La principal diferencia en esta característica la marca Windows
+Server, que envía alrededor de 6000 bytes menos que sus dos competidores. Esto concuerda con el número de peticiones por segundo, Windows es el que más
+peticiones realiza por segundo, seguido por Ubuntu de cerca y en último lugar y bastante alejado, CentOS.
+
+\vspace{5mm}
+
+Otro detalle a comentar es la velocidad transferencia. Aunque Windows tenga menos datos a enviar, Ubuntu tiene una mayor tasa de envío, es decir, envía más datos 
+por segundo. Por lo tanto, Ubuntu gana ventaja y gestiona cada petición casi a la misma  velocidad que Windows. CentOS se queda alejado en la velocidad de servicio
+de peticiones.
+
+\vspace{5mm} 
+
+A pesar de que en este caso Windows paracer mantener las prestaciones de Ubuntu, gran parte de esta ventaja viene dada por la baja cantidad de datos a transmitir.
+En caso de grandes páginas con muchos datos que enviar, Ubuntu debería ser capaz de atender más peticiones por segundo. Los datos extraidos pueden verse en 
+las siguientes figuras.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura7.png}  
+\caption{Ejecución de ab contra servidor en Ubuntu.}\label{fig:figura7}
+\end{figure}
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura8.png}  
+\caption{Ejecución de ab contra servidor en CentOS.}\label{fig:figura8}
+\end{figure}
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura9.png}  
+\caption{Ejecución de ab contra servidor en Windows}\label{fig:figura9}
+\end{figure}
+
+
+%------------------------------------------------
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 4
+%----------------------------------------------------------------------------------------
+
+\section{Instale y siga el tutorial realizando capturas de pantalla y comentándolas. En vez de usar la web de JMeter, haga el experimento usando sus máquinas virtuales. ¿coincide con los resultados de ab?}
+
+Al abrir JMeter nos aparece una ventana como la que se muestra en la Figura \ref{fig:figura10}. Como se muestra en esa misma figura, para crear hebras y poder enviar
+peticiones de prueba al servidor tenemos que crear un grupo de hilos. 
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura10.png}  
+\caption{Instalación de JMeter. Parte 1.}\label{fig:figura10}
+\end{figure}
+
+Ahora podemos configurar en la ventana del grupo de hilos la cantidad de peticiones, las hebras simultáneas, temporizadores y más complementos para sincronizar
+las hebras. Seguiré la misma línea que en el ejercicio anterior para poder comparar bien los resultados. Luego indico que habrá 5 petciones simultaneas y 20 
+iteraciones como se muestra en la Figura \ref{fig:figura11}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura11.png}  
+\caption{Instalación de JMeter. Parte 2.}\label{fig:figura11}
+\end{figure}
+
+Ahora hay que añadir una acción para esas hebras. En nuestro caso tenemos que añadir una petición de HTTP por defecto. Hay que añadirla sobre las hebras tal y 
+como se muestra en la Figura \ref{fig:figura12}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura12.png}  
+\caption{Instalación de JMeter. Parte 3.}\label{fig:figura12}
+\end{figure}
+
+Configuramos en la ventana de petición HTTP solo la dirección, el resto será tomado con los valores por defecto, es decir, conexión con una página web. La dirección,
+puesto que vamos a ejecutar contra una máquina virtual, es la dirección de la máquina en local.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura13.png}  
+\caption{Instalación de JMeter. Parte 4.}\label{fig:figura13}
+\end{figure}
+
+Por último y de la misma forma que añadimos la pestaña anterior, ahora añadimos un visor de resultados. Esto nos permitirá ver el resultado del test realizado contra la
+máquina. El resultado es similar al de la Figura \ref{fig:figura14}. Para ejecutar el test y empezar a ver resultados solo hay que pinchar sobre el botón de lanzar (icono 
+de iniciar) en la parte superior de la ventana mientras está abierta la pestaña de los hilos.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura14.png}  
+\caption{Instalación de JMeter. Parte 5.}\label{fig:figura14}
+\end{figure}
+
+Para añadir una petición concreta al test, adjuntamos una ventana de petición HTTP, elegiremos el argumento get y la ruta de la página inicial de nuestro servidor web.
+Una vez ejecutado el test, empezaran a aparecer los datos en la gráfica. Podemos ver que el tiempo consumido en cada petición es similar al conseguido con \textit{ab} 
+contra la máquina de Ubuntu Server. En el ejercicio anterior obteníamos que el 85\% de las peticiones se realizaban en menos de 30ms, en la gráfica de la 
+Figura \ref{fig:figura17} vemos tambíen que los datos se acumulan por debajo de los 15ms. A medida que vamos realizando más peticiones, habría algunos casos 
+particulares con un aumento de tiempo, que corresponde, más o menos, con lo ejecutado en \textit{ab}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura17.png}  
+\caption{Resultados de la prueba.}\label{fig:figura17}
+\end{figure}
+
+%------------------------------------------------
+
+
+
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 5
+%----------------------------------------------------------------------------------------
+
+\section{Programe un benchmark usando el lenguaje que desee o busque uno ya programado. Debe especificar:}
+\begin{itemize}
+  \item Objetivos del benchmark.
+	\item Métricas.
+	\item Instrucciones para su uso.
+	\item Ejemplo de uso.
+\end{itemize}
+
+Vamos a detallar el uso del benchmark procBench, cuyo repositorio puede encontrarse en \cite{procbench}. El objetivo principal
+de este benchmark es medir distintas características del rendimiento del procesador. Para ellos se realizan varios algoritmos
+de generación de números de estructura matemática como números primos o la sucesión de fibonacci.El benchmark puede 
+descargarse desde la página mencionada anteriormente. Puede obtenerse la versión compilada o el código fuente desde ésta.
+
+\vspace{5mm}
+
+El benchmark usa distintas unidades para medir la calidad del procesador. Por un lado mide la velocidad de ejecución de los 
+distintos algoritmos mencionados anteriormente.
+Además del tiempo, detalla algunas características de más bajo nivel, como son la velocidad de carga de los registros y de lectura
+de memoria.
+
+\vspace{5mm}
+
+La ejecución de este benchmark es bastante sencilla. Si se ejecuta sin argumentos, se mostrarán varias opciones de ejeción.
+Seleccionar los modos que se quieran ejecutar y volver a llamar al benchmark con los argumentos requeridos.
+En mi caso, solo me interesa probar la velocidad de ejecución de la generación de números y la ver la velocidad de lectura de memoria,
+luego especifico \textit{procbench -mp}. Podemos ver la salida en la Figura \ref{fig:figura15}. Podemos destacar que en la velocidad
+de lectura de memoria cuanto más grande es el buffer de lectura más tarda en traer los datos. Pero además, vemos un claro escalón de 32KB
+a 64KB, donde la velocidad se reduce más o menos a la mitad. Podemos intuir que existe algún impedimento hardware que
+limita las lecturas a esa cantidad, por ejemplo los buses.
+
+
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura15.png}  
+\caption{Ejecución de procbench -mp}\label{fig:figura15}
+\end{figure}
+
+
+\newpage
+
+\bibliography{citando} %archivo citas.bib que contiene las entradas 
+\bibliographystyle{plain} % hay varias formas de citar
+
+\end{document}
