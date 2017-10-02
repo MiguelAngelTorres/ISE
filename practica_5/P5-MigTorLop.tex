@@ -1,0 +1,331 @@
+\input{preambuloSimple.tex}
+\usepackage{listings}
+
+
+%----------------------------------------------------------------------------------------
+%	TÍTULO Y DATOS DEL ALUMNO
+%----------------------------------------------------------------------------------------
+
+\title{	
+\normalfont \normalsize 
+\textsc{\textbf{Ingeniería de Servidores (2016-2017)} \\ Doble grado en Ingeniería Informática y Matemáticas \\ Universidad de Granada} \\ [25pt] % Your university, school and/or department name(s)
+\horrule{2pt} \\[0.4cm] % Thin top horizontal rule
+\huge Memoria Práctica 5 \\ % The assignment title
+\horrule{2pt} \\[0.5cm] % Thick bottom horizontal rule
+}
+
+\author{Miguel Ángel Torres López} % Nombre y apellidos
+
+\date{\normalsize\today} % Incluye la fecha actual
+
+%----------------------------------------------------------------------------------------
+% DOCUMENTO
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Muestra el Título
+
+\newpage %inserta un salto de página
+
+\tableofcontents % para generar el índice de contenidos
+
+\newpage
+
+\listoffigures
+
+\listoftables
+
+\newpage
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 1
+%----------------------------------------------------------------------------------------
+
+\section{Al modificar los valores del kernel de este modo, no logramos que persistan después de reiniciar la máquina. ¿Qué archivo hay que editar para que los cambios sean permanentes?}
+
+Tal y como se menciona en la documentación de RedHat\cite{sysctlconf} podemos usar el archivo \textit{sysctl.conf}. Este archivo perdurará entre 
+reinicios y será leído por el kernel en cada inicio de la máquina, cargando así las preferencias establecidas en él. Por ejemplo, vamos a 
+modificar un parámetro para que nuestra máquna no responda a un \textit{ping}. Por motivos de rapidez y no tener que reiniciar la máquina, voy a 
+usar el comando \textit{sysctl}. Como puede verse en la Figura \ref{fig:figura1} los \textit{ping} dejan de contestarse.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.3]{Figura1.png}  
+\caption{Usando sysctl para cambiar características del sistema.}\label{fig:figura1}
+\end{figure}
+
+Nótese que al cambiar el archivo los cambios no tendrán efecto a no se que se obligue al kernel a cargar el archivo de nuevo. Esto se hace con 
+opcion -p del comand sysctl\cite{mansysctl}.
+
+
+
+\vspace{5mm}
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 2
+%----------------------------------------------------------------------------------------
+
+\section{¿Con qué opcion se muestran todos los parámetros modificables en tiempo de ejecución?}
+
+Como puede verse en el manual en línea\cite{mansysctl}, la opción -a lista todos los valores disponibles para modificar en tiempo de ejecución. 
+Se puede usar el comando grep visto en prácticas anteriores para filtrar el resultado.
+
+\subsection{Elija dos parámetros y explique, en dos líneas, qué función tienen.}
+
+En la referencia \cite{modparam}, tenemos una gran cantidad de parámetros especificados con una pequeña descripción y su rango
+de valores. Por ejemplo:
+
+\begin{itemize}
+	\item \textbf{threads-max}. Determina el número máximo de hebras que pueden crearse derivados de la utilidad para dividir 
+tareas \textit{fork}. El valor mínimo permitido es 20, es decir, como mínimo se tiene que dejar derivarse 20 threads.
+	\item \textbf{dmesg\_restrict}. Cuando está activado, valor 1, se obliga a los usuarios a tener privilegios para poder ejecutar
+	la orden dmesg. Si está desactivado, valor  0, todos los usuarios pueden utilizar dmesg para ver las llamadas al kernel.
+\end{itemize}
+
+Ambos parámetros pueden verse con el comando \textit{sysctl -a | grep kernel} con sus valores predeterminados. En las Figuras
+\ref{fig:figura2} y \ref{fig:figura3} pueden verse los de mi máquina.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura2.png}  
+\caption{Valor del parámetro threads-max}\label{fig:figura2}
+\end{figure}
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura3.png}  
+\caption{Valor del parámetro dmesg\_restrict}\label{fig:figura3}
+\end{figure}
+%------------------------------------------------
+
+\vspace{5mm}
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 3
+%----------------------------------------------------------------------------------------
+
+\section{Realice una copia de seguridad del registro, modifique el valor de una clave y restaure la copia de seguridad hecha. Compruebe que la clave tiene el valor original.}
+
+En la documentación de Windows\cite{register} vienen algunas directrices para hacerlo. Puesto que lo hacemos con interfaz, el
+cambio y la creación de claves es bastante intuitiva. El proceso a seguir para comprobar que la restauración del registro es
+efectiva es el siguiente:
+
+Primero abrimos el registro desde el buscador del inicio.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura4.png}  
+\caption{Abrir registro para edición.}\label{fig:figura4}
+\end{figure}
+
+Creamos una nueva clave de ejemplo y le damos un valor cualquiera.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura5.png}  
+\caption{Crear una nueva clave en el registro.}\label{fig:figura5}
+\end{figure}
+
+Desde el menú vemos las opciones de importar y exportar, la primera para cargar un registro y la segunda para exportar el 
+registro actual a un archivo. Pinchamos en exportar y seleccionamos un lugar seguro donde guardar el archivo con la
+configuración actual del registro.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura6.png}  
+\caption{Exportar registro a un lugar seguro.}\label{fig:figura6}
+\end{figure}
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura7.png}  
+\caption{Registro exportado a un lugar seguro.}\label{fig:figura7}
+\end{figure}
+
+Ahora cambiamos el valor de nuestra clave creada.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura8.png}  
+\caption{Cambio de valor de la clave creada.}\label{fig:figura8}
+\end{figure}
+
+En el mismo panel de antes, se nos da la opción de importar un registro. Desde el buscador que aparece elegimos el 
+archivo que contiene los datos del registros anterior. Nos aparecerá un mensaje avisando de la sobreescritura de los valores de
+las claves del registro.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura9.png}  
+\caption{Importar registro y recuperación del valor original de la clave.}\label{fig:figura9}
+\end{figure}
+
+%------------------------------------------------
+
+\vspace{5mm}
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 4
+%----------------------------------------------------------------------------------------
+
+\section{Enumere qué elementos se pueden configurar en Apache y en IIS para que Moodle funcione mejor.}
+
+En la documentación\cite{moodle} de Moodle vienen varios parámetros recomendados para mejorar el rendimiento
+de la plataforma. Entre estos hay una sección específica para Apache y otra para IIS.
+
+\begin{itemize}
+	\item \textbf{Apache Server}
+			\begin{itemize}
+				\item Establecer \textit{MaxRequestWorkers} como el 80\% de la memoria total divido por el máximo de memoria permitido por proceso de Apache. 
+				\item Usar Apache 2 en lugar de Apache.
+				\item Establecer \textit{KeepAliveTimeout} a 2 o 5 segundos. Para servidores muy saturados, considerar desactivar \textit{KeepAlive} solo si la página no contiene recursos dinámicos.
+				\item Desactivar ExtendedStatus.
+				\item Desactivar \textit{HostnameLookups} para reducir la latencia de DNS.
+				\item Reducir el tiempo de \textit{TimeOut}.
+				\item Considerar el uso de mod\_deflate para comprimir las respuestas del servidor.
+			\end{itemize}
+	\item \textbf{IIS}
+			\begin{itemize}
+				\item El equivalente a \textit{KeepAliveTimeout} es \textit{ListenBackLog}.
+				\item Se puede cambiar \textit{MemCacheSize} para probar otros tamaños para la caché de IIS.
+				\item Crear una DWORD llamada \textit{ObjectCacheTTL} para cambiar el tiempo que permanece un objeto en caché, por defecto a 30 segundos.
+			\end{itemize}
+\end{itemize}
+
+%------------------------------------------------
+
+
+
+
+\vspace{5mm}
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 5
+%----------------------------------------------------------------------------------------
+
+\section{Ajuste la compresión en el servidor y analice su comportamiento usando varios valores para el tamaño del archivo a partir del cual comprimir. para comprobar que está comprimiendo puede usar el navegador o comandos como curl o lynx. Muestre capturas de pantalla de todo el proceso.}
+
+En la documentación de Microsft\cite{compress} viene paso a paso explicado el proceso para activar y ajustar la compresión de IIS. Primero
+buscamos el administrador de IIS en el buscador de inicio. Al abrirlo buscamos en la vista de características la opción de compresión como 
+aparece en la Figura \ref{fig:figura10}
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura10.png}  
+\caption{Administrador de IIS}\label{fig:figura10}
+\end{figure}
+
+Se nos abrirá un panel como el que aparece en la Figura \ref{fig:figura11}. Por ahora, vamos a hacer una prueba tal cual están los datos por 
+defecto, así que dejaremos todas las casillas como se muestran en la Figura.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura11.png}  
+\caption{Valores por defecto de la compresión}\label{fig:figura11}
+\end{figure}
+
+Con motivo de comprobar si la página verdaderemente se comprime o no, modificaré su contenido para añadirle más peso. En la práctica dejé solo
+un mensaje saludando, ahora adjuntaré dos fotografías y buen conjunto de mensajes como en la Figura \ref{fig:figura12}. Esto hará que nuestra
+página se comprima con los valores por defectos de compresión.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura12.png}  
+\caption{Servidor web con contenido añadido.}\label{fig:figura12}
+\end{figure}
+
+Podemos ver en la Figura \ref{fig:figura13} como usando la orden curl\cite{mancurl} sacamos la información de las peticiones al servidor web. 
+Observamos que en la cabecera se nos especifica que se ha usado gzip para comprimir los datos transmitidos.
+
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura13.png}  
+\caption{Información sobre la petición al servidor web.}\label{fig:figura13}
+\end{figure}
+
+Ahora modificamos el valor mínimo que el archivo ha de tener para ser comprimido. Pondremos un número muy alto para asegurarnos de que nuestra
+página no sobrepasa el mínimo. 
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura14.png}  
+\caption{Cambiando el valor de las preferencias de compresión}\label{fig:figura14}
+\end{figure}
+
+En la Figura \ref{fig:figura15} tenemos el resultado de ejecutar de nuevo curl. Ahora el mínimo de peso para empezar a comprimir es más grande
+que el peso de nuestra página y, por lo tanto, la compresión ya no es realizada al enviar los datos. Podemos ver también que el tamaño de los 
+datos enviados ha crecido. Esto se debe a que anteriormente se estaba comprimiendo al enviar la información.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura15.png}  
+\caption{Información sobre la petición al servidor con mínimo para compresión alterado}\label{fig:figura15}
+\end{figure}
+
+%------------------------------------------------
+
+\vspace{5mm}
+
+%----------------------------------------------------------------------------------------
+%	Cuestión 6
+%----------------------------------------------------------------------------------------
+
+\section{Elija un servicio y modifique un parámetro para mejorar su comportamiento. Monitorice el servicio antes y después de la modificación del parámetro aplicando cargas al sistema (antes y después) mostrando los resultados de la monitorización.}
+
+Dado que hemos visto en un ejercicio anterior como mejorar el rendimiento de un servidor apache modificando varios parámetros, 
+ahora vamos a ponerlo en práctica para comprobar si realmente se produce una mejora. Primero haremos una prueba con la 
+herramienta \textit{ab}\cite{manab} vista en prácticas anteriores para ver el rendimiento base del servidor web.
+ 
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura18.png}  
+\caption{Rendimiento base del servidor web.}\label{fig:figura18}
+\end{figure}
+
+Siguiendo las indicaciones de la cuestión 4, vamos a modificar el parámetro \textit{KeepAliveTimeout} y lo vamos a reducir. Para
+ello vamos al archivo de configuración del servidor Apache, situado por defecto en \textit{/etc/apache2/apache2.conf}. Como se
+puede ver en la figura \ref{fig:figura16} el archivo de configuración contiene una pequeña explicación del parámetro, una 
+explicación más detallada puede verse en la documentación de Apache\cite{apacheargs}.  
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura16.png}  
+\caption{Cambio de KeepAliveTimeout en el archivo de configuración.}\label{fig:figura16}
+\end{figure}
+
+Veamos ahora como ha mejorado el rendimiento con respecto a la anterior ejecución. Se ha reducido el tiempo de respuesta de cada
+petición y se ha aumentado ligeramente la velocidad de transferencia de datos como puede verse en la Figura \ref{fig:figura19} 
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura19.png}  
+\caption{Repercusión en el servidor web tras cambiar KeepAliveTimeout.}\label{fig:figura19}
+\end{figure}
+
+Ahora vamos a dar un paso más, vamos a desactivar el \textit{KeepAlive}. Para ello volvemos a modificar el archivo de 
+configuración como puede verse en la Figura \ref{fig:figura17}.
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura17.png}  
+\caption{Cambio de KeepAlive en el archivo de configuración.}\label{fig:figura17}
+\end{figure}
+
+El nuevo test de ab ejecutado contra el servidor web nos da la salida que aparece en la Figura \ref{fig:figura20}.Volvemos a 
+ver una tímida mejoría en las características medidas. La mejora es bastante pequeña a causa del tamaño de la web,que hace que
+los datos transferidos sean muy pocos y haga menos significativo el cambio de los parámetros. 
+
+\begin{figure}[H] 
+\centering
+\includegraphics[scale=0.4]{Figura20.png}  
+\caption{Repercusión en el servidor web tras desactivar KeepAlive.}\label{fig:figura20}
+\end{figure}
+
+%------------------------------------------------
+
+\newpage
+
+\bibliography{citando} %archivo citas.bib que contiene las entradas 
+\bibliographystyle{plain} % hay varias formas de citar
+
+\end{document}
